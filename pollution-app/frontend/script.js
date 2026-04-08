@@ -741,15 +741,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         initGSAPReveals();
-        initLiveMotion();
         
         // Awwwards Upgrades
         initPageLoader();
         initPageTransitions();
         initButtonRipples();
         
-        // Premium Visual Systems
-        initCursorGlow();
+        // Premium Visual Systems (CSS-powered, no continuous JS)
         initSideNavDots();
         initSectionRevealLines();
         
@@ -849,82 +847,11 @@ function initGSAPReveals() {
     ScrollTrigger.config({ limitCallbacks: true });
 }
 
-// Gentle continuous breathing — keeps the page feeling alive
-function startHeadingFloat(elements) {
-    gsap.to(elements, {
-        y: '+=14',
-        rotationZ: 0.8,
-        duration: 3.5,
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-        stagger: { each: 0.5, from: 'random' }
-    });
-}
+// No continuous float — fire-once reveals only for zero lag
+function startHeadingFloat() { /* disabled for performance */ }
 
-/* ==================== LIVE MOTION (PERFORMANCE OPTIMIZED) ==================== */
-function initLiveMotion() {
-    if (typeof gsap === 'undefined') return;
-
-    // Skip all live effects on low-performance devices
-    if (document.body.classList.contains('low-performance')) return;
-
-    // 1. Minimal particles: only 10, CSS-only gradient, no filter cost
-    const particleContainer = document.createElement('div');
-    particleContainer.setAttribute('aria-hidden', 'true');
-    particleContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;';
-    document.body.appendChild(particleContainer);
-
-    for (let i = 0; i < 10; i++) {
-        const p = document.createElement('div');
-        const size = 6 + Math.random() * 10;
-        p.style.cssText = `position:absolute;width:${size}px;height:${size}px;
-            background:radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
-            border-radius:50%;will-change:transform;`;
-        particleContainer.appendChild(p);
-        gsap.set(p, { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, opacity: 0.1 + Math.random() * 0.15 });
-        // Very slow drift, long duration = few frames computed per second
-        gsap.to(p, {
-            x: '+=' + (Math.random() * 60 - 30),
-            y: '+=' + (Math.random() * 60 - 30),
-            duration: 25 + Math.random() * 20,
-            ease: 'sine.inOut',
-            repeat: -1,
-            yoyo: true
-        });
-    }
-
-    // 2. Hero gentle float — single tween, only Y axis
-    const heroCenter = document.querySelector('.hero .nature-center');
-    if (heroCenter) {
-        gsap.to(heroCenter, { y: 10, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true });
-    }
-
-    // 3. Mouse parallax — pre-queried targets, RAF-throttled, only translate (no 3D rotation)
-    const cardTargets = Array.from(document.querySelectorAll('.feature-card, .process-card, .control-panel'));
-    const videoTargets = Array.from(document.querySelectorAll('.hero-video-bg, .process-bg-video'));
-
-    if (!cardTargets.length && !videoTargets.length) return;
-
-    let mx = 0, my = 0, rafPending = false;
-
-    document.addEventListener('mousemove', (e) => {
-        mx = (e.clientX / window.innerWidth - 0.5);
-        my = (e.clientY / window.innerHeight - 0.5);
-        if (!rafPending) {
-            rafPending = true;
-            requestAnimationFrame(() => {
-                if (cardTargets.length) {
-                    gsap.to(cardTargets, { x: mx * 10, y: my * 10, duration: 1, ease: 'power1.out', overwrite: 'auto' });
-                }
-                if (videoTargets.length) {
-                    gsap.to(videoTargets, { x: mx * -25, y: my * -25, scale: 1.04, duration: 1.5, ease: 'power1.out', overwrite: 'auto' });
-                }
-                rafPending = false;
-            });
-        }
-    }, { passive: true });
-}
+/* initLiveMotion disabled — particles, parallax, floats all caused lag */
+function initLiveMotion() { /* disabled for performance */ }
 
 /* ==================== AWWWARDS UPGRADES (LOADER, TRANSITIONS, RIPPLES) ==================== */
 
@@ -1012,31 +939,8 @@ function initButtonRipples() {
 
 /* ==================== PREMIUM VISUAL SYSTEMS (JS) ==================== */
 
-// 1. Cursor Glow — soft ambient light follows the mouse
-function initCursorGlow() {
-    if (window.matchMedia('(pointer: coarse)').matches) return; // Skip on touch
-    
-    const glow = document.createElement('div');
-    glow.classList.add('cursor-glow');
-    document.body.appendChild(glow);
-    
-    let cx = 0, cy = 0, gx = 0, gy = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        cx = e.clientX;
-        cy = e.clientY;
-    }, { passive: true });
-    
-    // Smooth lerp follow (no GSAP needed, pure rAF)
-    function updateGlow() {
-        gx += (cx - gx) * 0.08;
-        gy += (cy - gy) * 0.08;
-        glow.style.left = gx + 'px';
-        glow.style.top = gy + 'px';
-        requestAnimationFrame(updateGlow);
-    }
-    requestAnimationFrame(updateGlow);
-}
+/* Cursor glow disabled — constant rAF loop caused lag */
+function initCursorGlow() { /* disabled for performance */ }
 
 // 2. Side Navigation Dots — tracks which section is active
 function initSideNavDots() {
