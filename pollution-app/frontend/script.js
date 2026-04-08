@@ -727,18 +727,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isHomepage) {
             initSmoothScroll();
             initScrollToTop();
-            initScrollBackgroundTransitions();
-            initScrollAnimations();
-            initScrollRevealObserver();
-            initScrollPerformanceMode();
-            initStaggerReveal();
             initHeroScrollCue();
-            initProcessTimeline();
-            initControlPointReveal();
             initFeatureCarousel();
-            initFeatureCardVideoBackground();
             initScrollProgressBar();
             initStartMonitoringButton();
+            // Only run legacy observer-based systems when GSAP is NOT available
+            if (typeof gsap === 'undefined') {
+                initScrollBackgroundTransitions();
+                initScrollAnimations();
+                initScrollRevealObserver();
+                initStaggerReveal();
+                initProcessTimeline();
+                initControlPointReveal();
+            }
         }
         
         initGSAPReveals();
@@ -777,38 +778,32 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Keep perspective for 3D effects sitewide
-    gsap.set('body', { perspective: 1200 });
-
-    // ── Hero: fast, snappy entrance on load ────────────────────────────────────
+    // ── Hero: fast, snappy entrance on load ──────────────────────────────────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
-        const heroTl = gsap.timeline({ delay: 0.15 });
-        heroTl.fromTo(heroReveals,
-            { y: 120, opacity: 0, scale: 0.6, rotationX: 30 },
+        gsap.fromTo(heroReveals,
+            { y: 80, opacity: 0, scale: 0.75 },
             {
-                y: 0, opacity: 1, scale: 1, rotationX: 0,
-                duration: 1.0, stagger: 0.18, ease: 'back.out(1.6)',
-                onComplete: () => startHeadingFloat(heroReveals)  // float AFTER reveal
+                y: 0, opacity: 1, scale: 1,
+                duration: 0.85, stagger: 0.15, ease: 'back.out(1.4)', delay: 0.1,
+                onComplete: () => startHeadingFloat(heroReveals)
             }
         );
     }
 
-    // ── Sections: pop-in reveal per section (NO scrub – stays visible) ─────────
+    // ── Section reveals: fire-once, stays visible ────────────────────────────
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
-        // Headings / text blocks
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals,
-                { y: 80, opacity: 0, scale: 0.7, rotationX: 25 },
+                { y: 60, opacity: 0, scale: 0.8 },
                 {
-                    y: 0, opacity: 1, scale: 1, rotationX: 0,
-                    duration: 0.9, stagger: 0.18, ease: 'back.out(1.5)',
+                    y: 0, opacity: 1, scale: 1,
+                    duration: 0.7, stagger: 0.14, ease: 'back.out(1.4)',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 80%',
-                        // No 'end' / no 'scrub' → fires once, element STAYS visible
+                        start: 'top 82%',
                         toggleActions: 'play none none none'
                     },
                     onComplete: () => startHeadingFloat(reveals)
@@ -816,34 +811,34 @@ function initGSAPReveals() {
             );
         }
 
-        // Cards pop-in with stagger and spring bounce
+        // Cards pop-in
         const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
         if (cards.length) {
             gsap.fromTo(cards,
-                { y: 100, opacity: 0, scale: 0.75, rotationY: 15 },
+                { y: 70, opacity: 0, scale: 0.82 },
                 {
-                    y: 0, opacity: 1, scale: 1, rotationY: 0,
-                    duration: 0.8, stagger: 0.12, ease: 'back.out(1.8)',
+                    y: 0, opacity: 1, scale: 1,
+                    duration: 0.65, stagger: 0.1, ease: 'back.out(1.6)',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 75%',
+                        start: 'top 78%',
                         toggleActions: 'play none none none'
                     }
                 }
             );
         }
 
-        // List items zipper cascade
+        // List items cascade
         const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
         if (listItems.length) {
             gsap.fromTo(listItems,
-                { x: -60, opacity: 0, scale: 0.88 },
+                { x: -50, opacity: 0 },
                 {
-                    x: 0, opacity: 1, scale: 1,
-                    duration: 0.6, stagger: 0.1, ease: 'power3.out',
+                    x: 0, opacity: 1,
+                    duration: 0.5, stagger: 0.08, ease: 'power3.out',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 70%',
+                        start: 'top 73%',
                         toggleActions: 'play none none none'
                     }
                 }
@@ -854,95 +849,78 @@ function initGSAPReveals() {
     ScrollTrigger.config({ limitCallbacks: true });
 }
 
-// Smooth ambient float that runs AFTER reveal completes (no conflict)
+// Minimal float — only Y, no 3D rotation (no GPU compositing cost)
 function startHeadingFloat(elements) {
     gsap.to(elements, {
-        y: '+=10',
-        rotationZ: 0.8,
-        duration: 3,
+        y: '+=8',
+        duration: 3.5,
         ease: 'sine.inOut',
         repeat: -1,
         yoyo: true,
-        stagger: { each: 0.5, from: 'random' }
+        stagger: { each: 0.6, from: 'random' }
     });
 }
 
-/* ==================== LIVE CONTINUOUS MOTION ==================== */
+/* ==================== LIVE MOTION (PERFORMANCE OPTIMIZED) ==================== */
 function initLiveMotion() {
     if (typeof gsap === 'undefined') return;
 
-    // 1. Ambient soft grey particles — slow, calm, never shiver
+    // Skip all live effects on low-performance devices
+    if (document.body.classList.contains('low-performance')) return;
+
+    // 1. Minimal particles: only 10, CSS-only gradient, no filter cost
     const particleContainer = document.createElement('div');
     particleContainer.setAttribute('aria-hidden', 'true');
     particleContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;';
     document.body.appendChild(particleContainer);
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 10; i++) {
         const p = document.createElement('div');
-        const size = 6 + Math.random() * 12;
+        const size = 6 + Math.random() * 10;
         p.style.cssText = `position:absolute;width:${size}px;height:${size}px;
-            background:radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
-            border-radius:50%;opacity:0;`;
+            background:radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
+            border-radius:50%;will-change:transform;`;
         particleContainer.appendChild(p);
-
-        gsap.set(p, {
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-        });
-
-        // Very slow random float — never snappy
+        gsap.set(p, { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, opacity: 0.1 + Math.random() * 0.15 });
+        // Very slow drift, long duration = few frames computed per second
         gsap.to(p, {
-            x: '+=' + (Math.random() * 80 - 40),
-            y: '+=' + (Math.random() * 80 - 40),
-            opacity: 0.08 + Math.random() * 0.2,
-            duration: 20 + Math.random() * 20,
+            x: '+=' + (Math.random() * 60 - 30),
+            y: '+=' + (Math.random() * 60 - 30),
+            duration: 25 + Math.random() * 20,
             ease: 'sine.inOut',
             repeat: -1,
             yoyo: true
         });
     }
 
-    // 2. Hero center gentle float (only .nature-center, not .gsap-reveal to avoid conflict)
+    // 2. Hero gentle float — single tween, only Y axis
     const heroCenter = document.querySelector('.hero .nature-center');
     if (heroCenter) {
-        gsap.to(heroCenter, {
-            y: 12,
-            duration: 4,
-            ease: 'sine.inOut',
-            repeat: -1,
-            yoyo: true
-        });
+        gsap.to(heroCenter, { y: 10, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true });
     }
 
-    // 3. Mouse parallax — video depth shift + card tilt
-    let mx = 0, my = 0;
-    let rAFId = null;
+    // 3. Mouse parallax — pre-queried targets, RAF-throttled, only translate (no 3D rotation)
+    const cardTargets = Array.from(document.querySelectorAll('.feature-card, .process-card, .control-panel'));
+    const videoTargets = Array.from(document.querySelectorAll('.hero-video-bg, .process-bg-video'));
+
+    if (!cardTargets.length && !videoTargets.length) return;
+
+    let mx = 0, my = 0, rafPending = false;
 
     document.addEventListener('mousemove', (e) => {
         mx = (e.clientX / window.innerWidth - 0.5);
         my = (e.clientY / window.innerHeight - 0.5);
-
-        if (!rAFId) {
-            rAFId = requestAnimationFrame(() => {
-                gsap.to('.feature-card, .process-card, .control-panel', {
-                    rotationY: mx * 18,
-                    rotationX: -my * 18,
-                    transformPerspective: 900,
-                    ease: 'power2.out',
-                    duration: 0.9,
-                    overwrite: 'auto'
-                });
-                gsap.to('.hero-video-bg, .process-bg-video', {
-                    x: mx * -35,
-                    y: my * -35,
-                    scale: 1.05,
-                    ease: 'power2.out',
-                    duration: 1.4,
-                    overwrite: 'auto'
-                });
-                rAFId = null;
+        if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => {
+                if (cardTargets.length) {
+                    gsap.to(cardTargets, { x: mx * 10, y: my * 10, duration: 1, ease: 'power1.out', overwrite: 'auto' });
+                }
+                if (videoTargets.length) {
+                    gsap.to(videoTargets, { x: mx * -25, y: my * -25, scale: 1.04, duration: 1.5, ease: 'power1.out', overwrite: 'auto' });
+                }
+                rafPending = false;
             });
         }
-    });
+    }, { passive: true });
 }
-
