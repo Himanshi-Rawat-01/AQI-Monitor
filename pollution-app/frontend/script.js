@@ -772,7 +772,7 @@ function smoothScrollToTop(duration = 800) {
     window.requestAnimationFrame(scroll);
 }
 
-/* ==================== GSAP ONE PAGE SCROLL REVEAL ==================== */
+/* ==================== GSAP ONE-PAGE CINEMATIC REVEAL ==================== */
 function initGSAPReveals() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
         console.warn('GSAP or ScrollTrigger not loaded.');
@@ -781,33 +781,47 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // ── Hero: BIG dramatic entrance ──────────────────────────────────────
+    // ── Hero: cinematic zoom-down from oversized ────────────────────────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
-        const tl = gsap.timeline({ delay: 0.2 });
-        tl.fromTo(heroReveals,
-            { y: 180, opacity: 0, scale: 0.4, rotationX: 35, filter: 'blur(12px)' },
+        const tl = gsap.timeline({ delay: 0.3 });
+        // Title: starts HUGE, zooms down to normal
+        tl.fromTo(heroReveals[0] || heroReveals,
+            { scale: 2.8, opacity: 0, y: -60, filter: 'blur(20px)' },
             {
-                y: 0, opacity: 1, scale: 1, rotationX: 0, filter: 'blur(0px)',
-                duration: 1.4, stagger: 0.25, ease: 'expo.out',
-                onComplete: () => startHeadingFloat(heroReveals)
+                scale: 1, opacity: 1, y: 0, filter: 'blur(0px)',
+                duration: 1.8, ease: 'expo.out'
             }
         );
+        // Subtitle + buttons stagger in after
+        if (heroReveals.length > 1) {
+            tl.fromTo(Array.from(heroReveals).slice(1),
+                { scale: 1.6, opacity: 0, y: 50, filter: 'blur(10px)' },
+                {
+                    scale: 1, opacity: 1, y: 0, filter: 'blur(0px)',
+                    duration: 1.2, stagger: 0.2, ease: 'expo.out'
+                },
+                '-=1.0' // overlap with title animation
+            );
+        }
+        tl.call(() => startHeadingFloat(heroReveals));
     }
 
-    // ── Section reveals: dramatic slide-up with rotation ─────────────────
+    // ── Sections: each section's content zooms from big to normal ────────
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
+
+        // Section headings: start 2.2x oversized, shrink to 1.0
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals,
-                { y: 120, opacity: 0, scale: 0.55, rotationX: 20, filter: 'blur(8px)' },
+                { scale: 2.2, opacity: 0, y: -40, filter: 'blur(14px)' },
                 {
-                    y: 0, opacity: 1, scale: 1, rotationX: 0, filter: 'blur(0px)',
-                    duration: 1.1, stagger: 0.2, ease: 'back.out(1.7)',
+                    scale: 1, opacity: 1, y: 0, filter: 'blur(0px)',
+                    duration: 1.3, stagger: 0.18, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 85%',
+                        start: 'top 90%',
                         toggleActions: 'play none none none'
                     },
                     onComplete: () => startHeadingFloat(reveals)
@@ -815,34 +829,34 @@ function initGSAPReveals() {
             );
         }
 
-        // Cards: dramatic 3D flip-in pop
+        // Cards: start 1.8x oversized with 3D tilt, compress into place
         const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
         if (cards.length) {
             gsap.fromTo(cards,
-                { y: 140, opacity: 0, scale: 0.6, rotationY: 25, rotationX: 15 },
+                { scale: 1.8, opacity: 0, y: 80, rotationX: 20, filter: 'blur(10px)' },
                 {
-                    y: 0, opacity: 1, scale: 1, rotationY: 0, rotationX: 0,
-                    duration: 1.0, stagger: 0.15, ease: 'back.out(2.0)',
+                    scale: 1, opacity: 1, y: 0, rotationX: 0, filter: 'blur(0px)',
+                    duration: 1.1, stagger: 0.14, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 80%',
+                        start: 'top 85%',
                         toggleActions: 'play none none none'
                     }
                 }
             );
         }
 
-        // List items: bold slide-in from left
+        // List items: start 1.4x oversized, slide in from left
         const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
         if (listItems.length) {
             gsap.fromTo(listItems,
-                { x: -100, opacity: 0, scale: 0.8 },
+                { scale: 1.4, x: -80, opacity: 0, filter: 'blur(6px)' },
                 {
-                    x: 0, opacity: 1, scale: 1,
-                    duration: 0.7, stagger: 0.12, ease: 'back.out(1.4)',
+                    scale: 1, x: 0, opacity: 1, filter: 'blur(0px)',
+                    duration: 0.8, stagger: 0.1, ease: 'expo.out',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 75%',
+                        start: 'top 80%',
                         toggleActions: 'play none none none'
                     }
                 }
@@ -853,16 +867,16 @@ function initGSAPReveals() {
     ScrollTrigger.config({ limitCallbacks: true });
 }
 
-// Visible continuous float — bigger motion so user always sees life
+// Gentle continuous breathing — keeps the page feeling alive
 function startHeadingFloat(elements) {
     gsap.to(elements, {
-        y: '+=18',
-        rotationZ: 1.2,
-        duration: 3,
+        y: '+=14',
+        rotationZ: 0.8,
+        duration: 3.5,
         ease: 'sine.inOut',
         repeat: -1,
         yoyo: true,
-        stagger: { each: 0.4, from: 'random' }
+        stagger: { each: 0.5, from: 'random' }
     });
 }
 

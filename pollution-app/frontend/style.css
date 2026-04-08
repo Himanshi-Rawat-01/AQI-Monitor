@@ -89,14 +89,14 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y proximity;
+    scroll-snap-type: y mandatory;
     scroll-padding-top: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
 }
 
-/* Ensure Full-Page Snapping for GSAP */
+/* Apple-style strict full-page snapping */
 section {
     min-height: 100vh;
     min-height: 100svh;
@@ -105,6 +105,8 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden;
+    position: relative;
 }
 
 /* ==================== GPU PERFORMANCE LAYER ==================== */
