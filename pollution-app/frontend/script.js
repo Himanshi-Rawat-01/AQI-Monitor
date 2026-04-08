@@ -735,6 +735,7 @@ document.addEventListener('DOMContentLoaded', function () {
             initProcessTimeline();
             initControlPointReveal();
             initFeatureCarousel();
+            initFeatureCardVideoBackground();
             initScrollProgressBar();
             initStartMonitoringButton();
         }
