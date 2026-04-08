@@ -80,32 +80,16 @@ function initNavbarScroll() {
     if (!navbar) return;
 
     let ticking = false;
-    let lastScrollY = window.pageYOffset;
     
     function updateNavbar() {
         const currentScroll = window.pageYOffset;
         
-        // Add solid glass background when scrolled
         if (currentScroll > 50) {
             navbar.classList.add('navbar-scrolled');
         } else {
             navbar.classList.remove('navbar-scrolled');
         }
-
-        // Smart auto-hide logic: Hide if scrolling down past 300px, show if scrolling up
-        if (currentScroll > 300) {
-            if (currentScroll > lastScrollY) {
-                // Scrolling down -> hide navbar
-                navbar.classList.add('navbar-hidden');
-            } else {
-                // Scrolling up -> show navbar
-                navbar.classList.remove('navbar-hidden');
-            }
-        } else {
-            navbar.classList.remove('navbar-hidden');
-        }
         
-        lastScrollY = currentScroll;
         ticking = false;
     }
     
@@ -758,7 +742,11 @@ document.addEventListener('DOMContentLoaded', function () {
         
         initGSAPReveals();
         initLiveMotion();
-        initAwwwardsUI();
+        
+        // Awwwards Upgrades
+        initPageLoader();
+        initPageTransitions();
+        initButtonRipples();
         
         console.log('AirSense initialized successfully');
     } catch (error) {
@@ -940,72 +928,78 @@ function initLiveMotion() {
     }, { passive: true });
 }
 
-/* ==================== AWWWARDS PREMIUM UI ==================== */
-function initAwwwardsUI() {
-    // 1. Cinematic Preloader Sequence
-    const preloader = document.querySelector('.gsap-preloader');
-    if (preloader) {
-        if (typeof gsap !== 'undefined') {
-            gsap.to(preloader, {
-                opacity: 0,
-                duration: 0.85,
-                ease: 'power2.inOut',
-                delay: 0.1,
-                onComplete: () => preloader.style.display = 'none'
-            });
-        } else {
-            preloader.style.display = 'none';
-        }
-    }
+/* ==================== AWWWARDS UPGRADES (LOADER, TRANSITIONS, RIPPLES) ==================== */
 
-    // 2. Tactile Button Ripple Interaction
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+// 1. Sleek Preloader
+function initPageLoader() {
+    const loader = document.getElementById('pageLoader');
+    if (!loader) return;
+    
+    // Hide loader smoothly once all assets (images/videos) finish loading
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            loader.classList.add('loaded');
+        }, 300); // Tiny artificial delay to ensure smooth rendering
+    });
+}
+
+// 2. Seamless Page Transitions
+function initPageTransitions() {
+    const links = document.querySelectorAll('a[href]');
+    
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const target = link.getAttribute('href');
+            
+            // Skip if it's an anchor link, a blank target, or javascript
+            if (target.startsWith('#') || target.startsWith('javascript') || link.getAttribute('target') === '_blank') {
+                return;
+            }
+
+            e.preventDefault();
+            
+            // Trigger exit transition
+            document.body.classList.add('page-transition-exit');
+            
+            // Redirect after the CSS transition duration
+            setTimeout(() => {
+                window.location.href = target;
+            }, 600);
+        });
+    });
+    
+    // Ensure back/forward cache doesn't trap users in a hidden state (Safari fallback)
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) {
+            document.body.classList.remove('page-transition-exit');
+        }
+    });
+}
+
+// 3. Dynamic Magnetic Ripple
+function initButtonRipples() {
+    const buttons = document.querySelectorAll('.btn');
+    
+    buttons.forEach(btn => {
+        btn.addEventListener('mousedown', function(e) {
+            // Calculate relative click coordinates
             const rect = btn.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-
+            
+            // Create ripple element
             const ripple = document.createElement('span');
-            ripple.className = 'btn-ripple';
+            ripple.classList.add('ripple-effect');
             
-            const size = Math.max(rect.width, rect.height);
+            // Size the ripple relative to the button
+            const size = Math.max(rect.width, rect.height) * 2;
             ripple.style.width = ripple.style.height = `${size}px`;
-            ripple.style.left = `${x - size / 2}px`;
-            ripple.style.top = `${y - size / 2}px`;
+            ripple.style.left = `${x - size/2}px`;
+            ripple.style.top = `${y - size/2}px`;
             
+            // Inject and self-clean
             btn.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-        });
-    });
-
-    // 3. Smooth Page Transitions for HTML Internal Links
-    document.querySelectorAll('a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetAttr = this.getAttribute('target');
-            const href = this.getAttribute('href');
-            
-            // Skip JS triggers, hashes, external links, active tabs
-            if (!href || href.startsWith('#') || href.startsWith('java') || targetAttr === '_blank' || this.classList.contains('active')) return;
-            
-            // If it's a structural page navigation link, fade out
-            if (href.endsWith('.html') || (!href.includes('://') && !href.startsWith('mailto:'))) {
-                e.preventDefault();
-                if (typeof gsap !== 'undefined') {
-                    const overlay = document.createElement('div');
-                    overlay.className = 'gsap-preloader';
-                    overlay.style.opacity = '0';
-                    document.body.appendChild(overlay);
-                    
-                    gsap.to(overlay, {
-                        opacity: 1,
-                        duration: 0.45,
-                        ease: 'power2.inOut',
-                        onComplete: () => window.location.href = href
-                    });
-                } else {
-                    window.location.href = href;
-                }
-            }
+            setTimeout(() => ripple.remove(), 700);
         });
     });
 }
