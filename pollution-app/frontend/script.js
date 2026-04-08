@@ -781,84 +781,61 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // ── Hero: cinematic zoom-down from oversized ────────────────────────
+    // ── Hero: cinematic zoom-down from oversized (NO blur = zero lag) ────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
         const tl = gsap.timeline({ delay: 0.3 });
-        // Title: starts HUGE, zooms down to normal
         tl.fromTo(heroReveals[0] || heroReveals,
-            { scale: 2.8, opacity: 0, y: -60, filter: 'blur(20px)' },
-            {
-                scale: 1, opacity: 1, y: 0, filter: 'blur(0px)',
-                duration: 1.8, ease: 'expo.out'
-            }
+            { scale: 2.5, opacity: 0, y: -50 },
+            { scale: 1, opacity: 1, y: 0, duration: 1.6, ease: 'expo.out' }
         );
-        // Subtitle + buttons stagger in after
         if (heroReveals.length > 1) {
             tl.fromTo(Array.from(heroReveals).slice(1),
-                { scale: 1.6, opacity: 0, y: 50, filter: 'blur(10px)' },
-                {
-                    scale: 1, opacity: 1, y: 0, filter: 'blur(0px)',
-                    duration: 1.2, stagger: 0.2, ease: 'expo.out'
-                },
-                '-=1.0' // overlap with title animation
+                { scale: 1.5, opacity: 0, y: 40 },
+                { scale: 1, opacity: 1, y: 0, duration: 1.0, stagger: 0.18, ease: 'expo.out' },
+                '-=0.9'
             );
         }
         tl.call(() => startHeadingFloat(heroReveals));
     }
 
-    // ── Sections: each section's content zooms from big to normal ────────
+    // ── Sections: oversized → normal (transform + opacity only) ──────────
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
 
-        // Section headings: start 2.2x oversized, shrink to 1.0
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals,
-                { scale: 2.2, opacity: 0, y: -40, filter: 'blur(14px)' },
+                { scale: 2.0, opacity: 0, y: -30 },
                 {
-                    scale: 1, opacity: 1, y: 0, filter: 'blur(0px)',
-                    duration: 1.3, stagger: 0.18, ease: 'expo.out',
-                    scrollTrigger: {
-                        trigger: section,
-                        start: 'top 90%',
-                        toggleActions: 'play none none none'
-                    },
+                    scale: 1, opacity: 1, y: 0,
+                    duration: 1.2, stagger: 0.16, ease: 'expo.out',
+                    scrollTrigger: { trigger: section, start: 'top 90%', toggleActions: 'play none none none' },
                     onComplete: () => startHeadingFloat(reveals)
                 }
             );
         }
 
-        // Cards: start 1.8x oversized with 3D tilt, compress into place
         const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
         if (cards.length) {
             gsap.fromTo(cards,
-                { scale: 1.8, opacity: 0, y: 80, rotationX: 20, filter: 'blur(10px)' },
+                { scale: 1.6, opacity: 0, y: 60 },
                 {
-                    scale: 1, opacity: 1, y: 0, rotationX: 0, filter: 'blur(0px)',
-                    duration: 1.1, stagger: 0.14, ease: 'expo.out',
-                    scrollTrigger: {
-                        trigger: section,
-                        start: 'top 85%',
-                        toggleActions: 'play none none none'
-                    }
+                    scale: 1, opacity: 1, y: 0,
+                    duration: 1.0, stagger: 0.12, ease: 'expo.out',
+                    scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none none' }
                 }
             );
         }
 
-        // List items: start 1.4x oversized, slide in from left
         const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
         if (listItems.length) {
             gsap.fromTo(listItems,
-                { scale: 1.4, x: -80, opacity: 0, filter: 'blur(6px)' },
+                { scale: 1.3, x: -60, opacity: 0 },
                 {
-                    scale: 1, x: 0, opacity: 1, filter: 'blur(0px)',
-                    duration: 0.8, stagger: 0.1, ease: 'expo.out',
-                    scrollTrigger: {
-                        trigger: section,
-                        start: 'top 80%',
-                        toggleActions: 'play none none none'
-                    }
+                    scale: 1, x: 0, opacity: 1,
+                    duration: 0.7, stagger: 0.09, ease: 'expo.out',
+                    scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none none' }
                 }
             );
         }
