@@ -742,6 +742,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         initGSAPReveals();
+        initLiveMotion();
         
         console.log('AirSense initialized successfully');
     } catch (error) {
@@ -811,4 +812,76 @@ function initGSAPReveals() {
     });
 
     ScrollTrigger.config({ limitCallbacks: true });
+}
+
+/* ==================== LIVE CONTINUOUS MOTION ==================== */
+function initLiveMotion() {
+    if (typeof gsap === 'undefined') return;
+
+    // 1. Ambient Air Particles (Deep background layer)
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'live-particles-container';
+    particleContainer.setAttribute('aria-hidden', 'true');
+    particleContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100vh;pointer-events:none;z-index:1;overflow:hidden;';
+    document.body.appendChild(particleContainer);
+
+    for (let i = 0; i < 40; i++) {
+        let p = document.createElement('div');
+        p.style.cssText = 'position:absolute;width:8px;height:8px;background:radial-gradient(circle, rgba(74,222,128,0.8) 0%, rgba(74,222,128,0) 70%);border-radius:50%;opacity:0;';
+        particleContainer.appendChild(p);
+
+        gsap.set(p, {
+            x: "random(0, " + window.innerWidth + ")",
+            y: "random(0, " + window.innerHeight + ")",
+            scale: "random(0.3, 2)"
+        });
+
+        // Breathing & drifting dots
+        gsap.to(p, {
+            x: "+=random(-150, 150)",
+            y: "+=random(-150, 150)",
+            opacity: "random(0.2, 0.7)",
+            duration: "random(4, 12)",
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true
+        });
+    }
+
+    // 2. Slow natural "Breathing" for hero layout
+    const mainTitle = document.querySelector('.nature-center');
+    if(mainTitle) {
+        gsap.to(mainTitle, {
+            y: 15,
+            duration: 3.5,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true
+        });
+    }
+
+    // 3. Immersive Mouse Parallax (Tilts cards and slightly pans videos)
+    document.addEventListener("mousemove", (e) => {
+        const xPos = (e.clientX / window.innerWidth - 0.5);
+        const yPos = (e.clientY / window.innerHeight - 0.5);
+        
+        // Real-time 3D tilt on all cards
+        gsap.to('.feature-card, .process-card, .btn', {
+            rotationY: xPos * 20,
+            rotationX: -yPos * 20,
+            transformPerspective: 1000,
+            transformOrigin: "center center",
+            ease: "power2.out",
+            duration: 0.8
+        });
+
+        // Subtly shift background videos opposite to mouse to create deep parallax
+        gsap.to('.hero-video-bg, .process-bg-video', {
+            x: xPos * -40,
+            y: yPos * -40,
+            scale: 1.05, // Slight scale up prevents edges showing during pan
+            ease: "power2.out",
+            duration: 1.2
+        });
+    });
 }
