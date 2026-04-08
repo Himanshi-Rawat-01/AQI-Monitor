@@ -777,34 +777,74 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Ultra high visibility hero intro
+    // Keep perspective for 3D effects sitewide
+    gsap.set('body', { perspective: 1200 });
+
+    // ── Hero: fast, snappy entrance on load ────────────────────────────────────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
-        gsap.fromTo(heroReveals, 
-            { y: 250, opacity: 0, scale: 0.3, rotationX: 40, rotationY: -10 }, 
-            { y: 0, opacity: 1, scale: 1, rotationX: 0, rotationY: 0, duration: 1.2, stagger: 0.2, ease: "back.out(1.5)", delay: 0.1 }
+        const heroTl = gsap.timeline({ delay: 0.15 });
+        heroTl.fromTo(heroReveals,
+            { y: 120, opacity: 0, scale: 0.6, rotationX: 30 },
+            {
+                y: 0, opacity: 1, scale: 1, rotationX: 0,
+                duration: 1.0, stagger: 0.18, ease: 'back.out(1.6)',
+                onComplete: () => startHeadingFloat(heroReveals)  // float AFTER reveal
+            }
         );
     }
 
-    // Scroll-scrubbing animation exactly tied to wheel, with HUGE scale and translate
+    // ── Sections: pop-in reveal per section (NO scrub – stays visible) ─────────
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
+        // Headings / text blocks
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
-            gsap.fromTo(reveals, 
-                { y: 400, opacity: 0, scale: 0.15, rotationX: 45 }, 
+            gsap.fromTo(reveals,
+                { y: 80, opacity: 0, scale: 0.7, rotationX: 25 },
                 {
-                    y: 0, 
-                    opacity: 1, 
-                    scale: 1, 
-                    rotationX: 0,
-                    stagger: 0.2, 
-                    ease: "power2.out",
+                    y: 0, opacity: 1, scale: 1, rotationX: 0,
+                    duration: 0.9, stagger: 0.18, ease: 'back.out(1.5)',
                     scrollTrigger: {
                         trigger: section,
-                        start: "top 95%", 
-                        end: "top 20%",   
-                        scrub: 1.2,       
+                        start: 'top 80%',
+                        // No 'end' / no 'scrub' → fires once, element STAYS visible
+                        toggleActions: 'play none none none'
+                    },
+                    onComplete: () => startHeadingFloat(reveals)
+                }
+            );
+        }
+
+        // Cards pop-in with stagger and spring bounce
+        const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
+        if (cards.length) {
+            gsap.fromTo(cards,
+                { y: 100, opacity: 0, scale: 0.75, rotationY: 15 },
+                {
+                    y: 0, opacity: 1, scale: 1, rotationY: 0,
+                    duration: 0.8, stagger: 0.12, ease: 'back.out(1.8)',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 75%',
+                        toggleActions: 'play none none none'
+                    }
+                }
+            );
+        }
+
+        // List items zipper cascade
+        const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
+        if (listItems.length) {
+            gsap.fromTo(listItems,
+                { x: -60, opacity: 0, scale: 0.88 },
+                {
+                    x: 0, opacity: 1, scale: 1,
+                    duration: 0.6, stagger: 0.1, ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
                     }
                 }
             );
@@ -814,76 +854,95 @@ function initGSAPReveals() {
     ScrollTrigger.config({ limitCallbacks: true });
 }
 
+// Smooth ambient float that runs AFTER reveal completes (no conflict)
+function startHeadingFloat(elements) {
+    gsap.to(elements, {
+        y: '+=10',
+        rotationZ: 0.8,
+        duration: 3,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+        stagger: { each: 0.5, from: 'random' }
+    });
+}
+
 /* ==================== LIVE CONTINUOUS MOTION ==================== */
 function initLiveMotion() {
     if (typeof gsap === 'undefined') return;
 
-    // 1. Ambient Air Particles (Soft Grey, Calm Drift)
+    // 1. Ambient soft grey particles — slow, calm, never shiver
     const particleContainer = document.createElement('div');
-    particleContainer.className = 'live-particles-container';
     particleContainer.setAttribute('aria-hidden', 'true');
-    particleContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100vh;pointer-events:none;z-index:1;overflow:hidden;';
+    particleContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;';
     document.body.appendChild(particleContainer);
 
-    for (let i = 0; i < 30; i++) {
-        let p = document.createElement('div');
-        p.style.cssText = 'position:absolute;width:10px;height:10px;background:radial-gradient(circle, rgba(200,200,200,0.5) 0%, rgba(200,200,200,0) 70%);border-radius:50%;opacity:0;';
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        const size = 6 + Math.random() * 12;
+        p.style.cssText = `position:absolute;width:${size}px;height:${size}px;
+            background:radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
+            border-radius:50%;opacity:0;`;
         particleContainer.appendChild(p);
 
         gsap.set(p, {
-            x: "random(0, " + window.innerWidth + ")",
-            y: "random(0, " + window.innerHeight + ")",
-            scale: "random(0.3, 2)"
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
         });
 
-        // Calm, extremely slow drift so they don't 'shiver'
+        // Very slow random float — never snappy
         gsap.to(p, {
-            x: "+=random(-50, 50)",
-            y: "+=random(-50, 50)",
-            opacity: "random(0.1, 0.5)",
-            duration: "random(15, 30)", 
-            ease: "sine.inOut",
+            x: '+=' + (Math.random() * 80 - 40),
+            y: '+=' + (Math.random() * 80 - 40),
+            opacity: 0.08 + Math.random() * 0.2,
+            duration: 20 + Math.random() * 20,
+            ease: 'sine.inOut',
             repeat: -1,
             yoyo: true
         });
     }
 
-    // 2. Slow natural "Breathing" for all headings to stay alive
-    const headings = document.querySelectorAll('.gsap-reveal, .nature-center');
-    headings.forEach(heading => {
-        gsap.to(heading, {
-            y: "+=8",
-            rotationZ: "random(-1, 1)",
-            duration: "random(3, 5)",
-            ease: "sine.inOut",
+    // 2. Hero center gentle float (only .nature-center, not .gsap-reveal to avoid conflict)
+    const heroCenter = document.querySelector('.hero .nature-center');
+    if (heroCenter) {
+        gsap.to(heroCenter, {
+            y: 12,
+            duration: 4,
+            ease: 'sine.inOut',
             repeat: -1,
-            yoyo: true,
-            delay: "random(0, 2)"
+            yoyo: true
         });
-    });
+    }
 
-    // 3. Immersive Mouse Parallax (Tilts cards and slightly pans videos)
-    document.addEventListener("mousemove", (e) => {
-        const xPos = (e.clientX / window.innerWidth - 0.5);
-        const yPos = (e.clientY / window.innerHeight - 0.5);
-        
-        // Real-time 3D tilt on all cards
-        gsap.to('.feature-card, .process-card, .btn', {
-            rotationY: xPos * 20,
-            rotationX: -yPos * 20,
-            transformPerspective: 1000,
-            transformOrigin: "center center",
-            ease: "power2.out",
-            duration: 0.8
-        });
+    // 3. Mouse parallax — video depth shift + card tilt
+    let mx = 0, my = 0;
+    let rAFId = null;
 
-        // Subtly shift background videos opposite to mouse to create deep parallax
-        gsap.to('.hero-video-bg, .process-bg-video', {
-            x: xPos * -40,
-            y: yPos * -40,
-            scale: 1.05, // Slight scale up prevents edges showing during pan
-            ease: "power2.out",
-            duration: 1.2
-        });
+    document.addEventListener('mousemove', (e) => {
+        mx = (e.clientX / window.innerWidth - 0.5);
+        my = (e.clientY / window.innerHeight - 0.5);
+
+        if (!rAFId) {
+            rAFId = requestAnimationFrame(() => {
+                gsap.to('.feature-card, .process-card, .control-panel', {
+                    rotationY: mx * 18,
+                    rotationX: -my * 18,
+                    transformPerspective: 900,
+                    ease: 'power2.out',
+                    duration: 0.9,
+                    overwrite: 'auto'
+                });
+                gsap.to('.hero-video-bg, .process-bg-video', {
+                    x: mx * -35,
+                    y: my * -35,
+                    scale: 1.05,
+                    ease: 'power2.out',
+                    duration: 1.4,
+                    overwrite: 'auto'
+                });
+                rAFId = null;
+            });
+        }
     });
 }
+
