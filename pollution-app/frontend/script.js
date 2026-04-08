@@ -776,34 +776,34 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Fast, crisp hero intro on page load (removed blur, tightened speed)
+    // Ultra high visibility hero intro
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
         gsap.fromTo(heroReveals, 
-            { y: 50, opacity: 0, scale: 0.9 }, 
-            { y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.15, ease: "power2.out", delay: 0.1 }
+            { y: 250, opacity: 0, scale: 0.3, rotationX: 40, rotationY: -10 }, 
+            { y: 0, opacity: 1, scale: 1, rotationX: 0, rotationY: 0, duration: 1.2, stagger: 0.2, ease: "back.out(1.5)", delay: 0.1 }
         );
     }
 
-    // Scroll-scrubbing animation for other sections
-    // This physically moves headings up/down and scales them exactly as you scroll the wheel
+    // Scroll-scrubbing animation exactly tied to wheel, with HUGE scale and translate
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals, 
-                { y: 150, opacity: 0, scale: 0.75 }, 
+                { y: 400, opacity: 0, scale: 0.15, rotationX: 45 }, 
                 {
                     y: 0, 
                     opacity: 1, 
                     scale: 1, 
-                    stagger: 0.15, 
-                    ease: "power1.out",
+                    rotationX: 0,
+                    stagger: 0.2, 
+                    ease: "power2.out",
                     scrollTrigger: {
                         trigger: section,
-                        start: "top 90%", // Start animating when section slightly enters
-                        end: "top 25%",   // Finish animating when section is fully in view
-                        scrub: 1,         // Ties animation exactly to scroll bar with 1s smoothing
+                        start: "top 95%", 
+                        end: "top 20%",   
+                        scrub: 1.2,       
                     }
                 }
             );
