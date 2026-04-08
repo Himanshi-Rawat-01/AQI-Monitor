@@ -776,41 +776,39 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero section explicit reveal (since it's typically visible on load)
+    // Fast, crisp hero intro on page load (removed blur, tightened speed)
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
         gsap.fromTo(heroReveals, 
-            { y: 120, opacity: 0, filter: "blur(24px)", scale: 0.8, rotationX: 25 }, 
-            { y: 0, opacity: 1, filter: "blur(0px)", scale: 1, rotationX: 0, duration: 1.8, stagger: 0.3, ease: "back.out(1.4)", delay: 0.2 }
+            { y: 50, opacity: 0, scale: 0.9 }, 
+            { y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.15, ease: "power2.out", delay: 0.1 }
         );
     }
 
-    // ScrollTrigger for all other sections
+    // Scroll-scrubbing animation for other sections
+    // This physically moves headings up/down and scales them exactly as you scroll the wheel
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals, 
-                { y: 150, opacity: 0, scale: 0.85, filter: "blur(16px)", rotationX: 15 }, 
+                { y: 150, opacity: 0, scale: 0.75 }, 
                 {
                     y: 0, 
                     opacity: 1, 
                     scale: 1, 
-                    filter: "blur(0px)",
-                    rotationX: 0,
-                    duration: 1.6, 
-                    stagger: 0.3, 
-                    ease: "expo.out",
+                    stagger: 0.15, 
+                    ease: "power1.out",
                     scrollTrigger: {
                         trigger: section,
-                        start: "top 65%",
-                        toggleActions: "play none none reverse"
+                        start: "top 90%", // Start animating when section slightly enters
+                        end: "top 25%",   // Finish animating when section is fully in view
+                        scrub: 1,         // Ties animation exactly to scroll bar with 1s smoothing
                     }
                 }
             );
         }
     });
 
-    // Force snap stabilization
     ScrollTrigger.config({ limitCallbacks: true });
 }
