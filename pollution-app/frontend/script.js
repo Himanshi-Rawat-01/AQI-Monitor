@@ -727,19 +727,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isHomepage) {
             initSmoothScroll();
             initScrollToTop();
+            initScrollBackgroundTransitions();
+            initScrollAnimations();
+            initScrollRevealObserver();
+            initStaggerReveal();
             initHeroScrollCue();
+            initProcessTimeline();
+            initControlPointReveal();
             initFeatureCarousel();
             initScrollProgressBar();
             initStartMonitoringButton();
-            // Only run legacy observer-based systems when GSAP is NOT available
-            if (typeof gsap === 'undefined') {
-                initScrollBackgroundTransitions();
-                initScrollAnimations();
-                initScrollRevealObserver();
-                initStaggerReveal();
-                initProcessTimeline();
-                initControlPointReveal();
-            }
         }
         
         initGSAPReveals();
