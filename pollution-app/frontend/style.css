@@ -109,33 +109,36 @@ section {
 
 /* ==================== GPU PERFORMANCE LAYER ==================== */
 /* Pre-promote animated elements to GPU composite layers */
-.gsap-reveal,
+.gsap-reveal {
+    /* Hidden until GSAP reveals them */
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+/* Override the old [data-reveal] opacity:0 rule so it doesn't fight GSAP */
+[data-reveal] {
+    opacity: 1 !important;
+}
+
+
 .feature-card,
 .process-card,
 .timeline-card,
-.control-panel,
-.hero-video-bg,
-.process-bg-video,
-.nature-center,
-.scroll-cue {
+.control-panel {
     will-change: transform, opacity;
-    /* Isolate layout so reflows don't cascade */
-    contain: layout style;
 }
 
-/* Videos: object-fit handles sizing, contain paint to stop repaints rippling */
+/* Videos: promote to GPU composite layer for smooth pan */
 .hero-video-bg,
 .process-bg-video {
-    contain: strict;
     will-change: transform;
 }
 
-/* Disable expensive backdrop-filter on body::before during scroll */
+/* Disable expensive backdrop-filter during active scroll */
 .is-scrolling .navbar:not(.navbar-scrolled) {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
-
 
 /* Page load animation */
 @keyframes pageEnter {
