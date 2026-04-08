@@ -778,98 +778,81 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // ── Hero: immediate entrance on load ──────────────────────────────────────
+    // ── Hero: fast, snappy entrance on load ──────────────────────────────────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
-    const heroButtons = document.querySelectorAll('.hero .btn, .hero .hero-badge, .hero .hero-features-row, .hero .scroll-cue');
-
-    const heroTl = gsap.timeline({ delay: 0.1 });
-
     if (heroReveals.length) {
-        // Start heading/desc invisible
-        gsap.set(heroReveals, { y: 60, opacity: 0, scale: 0.8 });
-        heroTl.to(heroReveals, {
-            y: 0, opacity: 1, scale: 1,
-            duration: 0.75, stagger: 0.15, ease: 'back.out(1.4)',
-            onComplete: () => startHeadingFloat(heroReveals)
-        });
+        gsap.fromTo(heroReveals,
+            { y: 80, opacity: 0, scale: 0.75 },
+            {
+                y: 0, opacity: 1, scale: 1,
+                duration: 0.85, stagger: 0.15, ease: 'back.out(1.4)', delay: 0.1,
+                onComplete: () => startHeadingFloat(heroReveals)
+            }
+        );
     }
 
-    if (heroButtons.length) {
-        // Start buttons invisible
-        gsap.set(heroButtons, { y: 30, opacity: 0 });
-        heroTl.to(heroButtons, {
-            y: 0, opacity: 1,
-            duration: 0.55, stagger: 0.1, ease: 'power2.out'
-        }, '-=0.3'); // overlap slightly with heading end
-    }
-
-
-    // ── Section reveals: use 'top bottom' so snap scroll doesn't block them ──
+    // ── Section reveals: fire-once, stays visible ────────────────────────────
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
-            gsap.set(reveals, { y: 60, opacity: 0, scale: 0.8 });
-            gsap.to(reveals, {
-                y: 0, opacity: 1, scale: 1,
-                duration: 0.7, stagger: 0.14, ease: 'back.out(1.4)',
-                scrollTrigger: {
-                    trigger: section,
-                    // 'top bottom' fires as soon as section top enters viewport bottom
-                    // Works reliably with scroll snap
-                    start: 'top bottom',
-                    end: 'top 30%',
-                    toggleActions: 'play none none none',
-                    once: true
-                },
-                onComplete: () => startHeadingFloat(reveals)
-            });
+            gsap.fromTo(reveals,
+                { y: 60, opacity: 0, scale: 0.8 },
+                {
+                    y: 0, opacity: 1, scale: 1,
+                    duration: 0.7, stagger: 0.14, ease: 'back.out(1.4)',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 82%',
+                        toggleActions: 'play none none none'
+                    },
+                    onComplete: () => startHeadingFloat(reveals)
+                }
+            );
         }
 
         // Cards pop-in
         const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
         if (cards.length) {
-            gsap.set(cards, { y: 70, opacity: 0, scale: 0.82 });
-            gsap.to(cards, {
-                y: 0, opacity: 1, scale: 1,
-                duration: 0.65, stagger: 0.1, ease: 'back.out(1.6)',
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top bottom',
-                    toggleActions: 'play none none none',
-                    once: true
+            gsap.fromTo(cards,
+                { y: 70, opacity: 0, scale: 0.82 },
+                {
+                    y: 0, opacity: 1, scale: 1,
+                    duration: 0.65, stagger: 0.1, ease: 'back.out(1.6)',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 78%',
+                        toggleActions: 'play none none none'
+                    }
                 }
-            });
+            );
         }
 
         // List items cascade
         const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
         if (listItems.length) {
-            gsap.set(listItems, { x: -50, opacity: 0 });
-            gsap.to(listItems, {
-                x: 0, opacity: 1,
-                duration: 0.5, stagger: 0.08, ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top bottom',
-                    toggleActions: 'play none none none',
-                    once: true
+            gsap.fromTo(listItems,
+                { x: -50, opacity: 0 },
+                {
+                    x: 0, opacity: 1,
+                    duration: 0.5, stagger: 0.08, ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 73%',
+                        toggleActions: 'play none none none'
+                    }
                 }
-            });
+            );
         }
     });
 
     ScrollTrigger.config({ limitCallbacks: true });
-    // Refresh after a brief delay to let snap layout settle
-    setTimeout(() => ScrollTrigger.refresh(), 400);
 }
 
-// Float — uses absolute y target to prevent compounding drift
+// Minimal float — only Y, no 3D rotation (no GPU compositing cost)
 function startHeadingFloat(elements) {
-    // Kill any existing float tweens on these elements first
-    gsap.killTweensOf(elements, 'y');
     gsap.to(elements, {
-        y: 8,
+        y: '+=8',
         duration: 3.5,
         ease: 'sine.inOut',
         repeat: -1,
@@ -877,7 +860,6 @@ function startHeadingFloat(elements) {
         stagger: { each: 0.6, from: 'random' }
     });
 }
-
 
 /* ==================== LIVE MOTION (PERFORMANCE OPTIMIZED) ==================== */
 function initLiveMotion() {

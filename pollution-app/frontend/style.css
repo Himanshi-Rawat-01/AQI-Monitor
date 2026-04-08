@@ -109,36 +109,33 @@ section {
 
 /* ==================== GPU PERFORMANCE LAYER ==================== */
 /* Pre-promote animated elements to GPU composite layers */
-.gsap-reveal {
-    /* Hidden until GSAP reveals them */
-    opacity: 0;
-    will-change: transform, opacity;
-}
-
-/* Override the old [data-reveal] opacity:0 rule so it doesn't fight GSAP */
-[data-reveal] {
-    opacity: 1 !important;
-}
-
-
+.gsap-reveal,
 .feature-card,
 .process-card,
 .timeline-card,
-.control-panel {
+.control-panel,
+.hero-video-bg,
+.process-bg-video,
+.nature-center,
+.scroll-cue {
     will-change: transform, opacity;
+    /* Isolate layout so reflows don't cascade */
+    contain: layout style;
 }
 
-/* Videos: promote to GPU composite layer for smooth pan */
+/* Videos: object-fit handles sizing, contain paint to stop repaints rippling */
 .hero-video-bg,
 .process-bg-video {
+    contain: strict;
     will-change: transform;
 }
 
-/* Disable expensive backdrop-filter during active scroll */
+/* Disable expensive backdrop-filter on body::before during scroll */
 .is-scrolling .navbar:not(.navbar-scrolled) {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
+
 
 /* Page load animation */
 @keyframes pageEnter {
@@ -264,15 +261,14 @@ section {
 }
 
 /* Scroll Animation Classes */
-/* GSAP now handles all reveals — override the old opacity:0 hiding */
 .scroll-animate {
-    opacity: 1;
+    opacity: 0;
     transition: none;
-    will-change: transform, opacity;
+    will-change: transform, opacity, filter;
 }
 
 .scroll-animate[data-reveal] {
-    opacity: 1;
+    opacity: 0;
 }
 
 .scroll-animate.animate-in,
