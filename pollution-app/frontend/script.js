@@ -945,14 +945,22 @@ function initPageLoader() {
 
 // 2. Seamless Page Transitions
 function initPageTransitions() {
+    // Only attach to real navigation links, NOT form buttons or onclick handlers
     const links = document.querySelectorAll('a[href]');
     
     links.forEach(link => {
         link.addEventListener('click', function(e) {
             const target = link.getAttribute('href');
             
-            // Skip if it's an anchor link, a blank target, or javascript
-            if (target.startsWith('#') || target.startsWith('javascript') || link.getAttribute('target') === '_blank') {
+            // Skip: anchors, javascript:, blank targets, links inside forms,
+            //        links with onclick handlers, and links that are buttons
+            if (!target ||
+                target.startsWith('#') ||
+                target.startsWith('javascript') ||
+                link.getAttribute('target') === '_blank' ||
+                link.closest('form') ||
+                link.hasAttribute('onclick') ||
+                link.getAttribute('role') === 'button') {
                 return;
             }
 
