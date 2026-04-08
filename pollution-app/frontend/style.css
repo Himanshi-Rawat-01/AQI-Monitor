@@ -347,8 +347,8 @@ body::before {
 /* Utility Classes */
 .glass-card {
     background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     padding: 3rem 2rem;
     border-radius: 1.5rem;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -673,9 +673,9 @@ body::before {
 
 .navbar-scrolled {
     position: fixed;
-    background: rgba(30, 34, 40, 0.35);
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    background: rgba(15, 20, 25, 0.92);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
     border-bottom: 1px solid rgba(255,255,255,0.08);
     transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -812,8 +812,8 @@ body::before {
     border-radius: 12px !important;
     border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
     transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     box-shadow: 
         0 4px 16px rgba(0, 0, 0, 0.1),
         inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
@@ -905,8 +905,8 @@ body::before {
     text-decoration: none;
     white-space: nowrap;
     gap: 0.5rem;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     position: relative;
     overflow: hidden;
     box-shadow: 
@@ -945,8 +945,8 @@ body::before {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     position: relative;
     z-index: 1;
-    backdrop-filter: blur(30px) saturate(180%);
-    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .btn-primary::after {
@@ -992,8 +992,8 @@ body::before {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     position: relative;
     z-index: 1;
-    backdrop-filter: blur(30px) saturate(180%);
-    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .btn-secondary::after {
@@ -1293,8 +1293,8 @@ body::before {
 
 /* Backdrop blur entrance */
 @keyframes backdropBlurEnter {
-    0% { opacity: 0; backdrop-filter: blur(20px); transform: translateY(20px); }
-    100% { opacity: 1; backdrop-filter: blur(0); transform: translateY(0); }
+    0% { opacity: 0; backdrop-filter: none; transform: translateY(20px); }
+    100% { opacity: 1; backdrop-filter: none; transform: translateY(0); }
 }
 
 /* Counter animation (for numbers) */
@@ -1880,8 +1880,8 @@ input[type="checkbox"] {
     visibility: hidden;
     transition: all var(--transition-fast);
     z-index: 999;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
@@ -1930,7 +1930,7 @@ input[type="checkbox"] {
     gap: 0.5rem;
     padding: 0.55rem 1.25rem;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
-    backdrop-filter: blur(20px);
+    backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50px;
     font-family: var(--font-secondary);
@@ -2512,8 +2512,8 @@ body.low-performance section {
     background: rgba(10, 14, 18, 0.58);
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
-    backdrop-filter: blur(12px) saturate(130%);
-    -webkit-backdrop-filter: blur(12px) saturate(130%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .homepage .hero {
@@ -2555,23 +2555,23 @@ body.low-performance section {
 .homepage .hero-badge {
     border: 1px solid rgba(255, 255, 255, 0.4);
     background: rgba(16, 22, 30, 0.42);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .homepage .hero-feature-item {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .homepage .btn-primary {
     background: rgba(14, 20, 28, 0.62);
     border: 1px solid rgba(255, 255, 255, 0.24);
     color: #f4f6f8;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .homepage .btn-primary:hover {
@@ -2583,8 +2583,8 @@ body.low-performance section {
     background: rgba(255, 255, 255, 0.14);
     border: 1px solid rgba(255, 255, 255, 0.32);
     color: #f4f6f8;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .homepage .btn-secondary:hover {
@@ -2629,8 +2629,8 @@ body.low-performance section {
     border-radius: 1.2rem;
     padding: 1.35rem 1.25rem;
     margin-bottom: 1.6rem;
-    backdrop-filter: blur(10px) saturate(90%);
-    -webkit-backdrop-filter: blur(10px) saturate(90%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
@@ -2905,8 +2905,8 @@ body.low-performance section {
     justify-content: center;
     cursor: pointer;
     z-index: 4;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
 }
 
@@ -2984,8 +2984,8 @@ body.low-performance section {
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 1.1rem;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(12px) saturate(125%);
-    -webkit-backdrop-filter: blur(12px) saturate(125%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     position: relative;
     overflow: hidden;
 }
@@ -3095,8 +3095,8 @@ body.low-performance section {
     border-radius: 1.5rem;
     overflow: hidden;
     background: rgba(15, 20, 28, 0.72);
-    backdrop-filter: blur(24px) saturate(150%);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.10);
     box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
     position: relative;
@@ -3429,8 +3429,8 @@ body.low-performance section {
 /* ── Footer (auth pages) ── */
 .footer {
     background: rgba(10, 14, 20, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
     padding: 2rem 1.5rem 1rem;
     color: rgba(255, 255, 255, 0.45);
