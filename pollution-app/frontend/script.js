@@ -748,6 +748,13 @@ document.addEventListener('DOMContentLoaded', function () {
         initPageTransitions();
         initButtonRipples();
         
+        // Premium UI Layer
+        initLenisScroll();
+        initSmartNavbar();
+        initCustomCursor();
+        initScrollProgress();
+        initHeroMaskReveal();
+        
         console.log('AirSense initialized successfully');
     } catch (error) {
         console.error('Initialization error:', error);
@@ -1009,5 +1016,142 @@ function initButtonRipples() {
             btn.appendChild(ripple);
             setTimeout(() => ripple.remove(), 700);
         });
+    });
+}
+
+/* ==================== PREMIUM UI: LENIS SMOOTH SCROLL ==================== */
+function initLenisScroll() {
+    if (typeof Lenis === 'undefined') return;
+
+    const lenis = new Lenis({
+        duration: 1.2,               // inertia duration
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // exponential ease-out
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+    });
+
+    // Connect Lenis to GSAP ScrollTrigger
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+    } else {
+        // Fallback RAF loop
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+}
+
+/* ==================== PREMIUM UI: SMART NAVBAR ==================== */
+function initSmartNavbar() {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    let lastScroll = 0;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const currentScroll = window.pageYOffset;
+                
+                // Hide on scroll down (past 80px), show on scroll up
+                if (currentScroll > 80 && currentScroll > lastScroll) {
+                    navbar.classList.add('navbar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-hidden');
+                }
+
+                // Blur background when scrolled
+                if (currentScroll > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+
+                lastScroll = currentScroll;
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+}
+
+/* ==================== PREMIUM UI: CUSTOM CURSOR ==================== */
+function initCustomCursor() {
+    // Only on devices with a fine pointer (no touchscreens)
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    const cursor = document.getElementById('customCursor');
+    const dot = document.getElementById('customCursorDot');
+    if (!cursor || !dot) return;
+
+    document.body.classList.add('custom-cursor-active');
+
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        // Dot follows instantly
+        dot.style.left = mouseX + 'px';
+        dot.style.top = mouseY + 'px';
+    }, { passive: true });
+
+    // Outer ring follows with smooth lag (lerp)
+    function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(animateCursor);
+    }
+    requestAnimationFrame(animateCursor);
+
+    // Expand cursor on hoverable elements
+    const hoverTargets = document.querySelectorAll('a, button, .btn, .feature-card, .process-card, .nav-link, input, select');
+    hoverTargets.forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+    });
+}
+
+/* ==================== PREMIUM UI: SCROLL PROGRESS BAR ==================== */
+function initScrollProgress() {
+    const fill = document.getElementById('scrollProgressFill');
+    if (!fill) return;
+
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.width = progress + '%';
+    }, { passive: true });
+}
+
+/* ==================== PREMIUM UI: HERO TEXT MASK REVEAL ==================== */
+function initHeroMaskReveal() {
+    if (typeof gsap === 'undefined') return;
+
+    const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
+    if (!heroReveals.length) return;
+
+    // Set initial masked state
+    gsap.set(heroReveals, { clipPath: 'inset(0 100% 0 0)' });
+
+    // Animate mask open after loader fades (delay ~0.5s)
+    gsap.to(heroReveals, {
+        clipPath: 'inset(0 0% 0 0)',
+        duration: 1.0,
+        stagger: 0.2,
+        ease: 'power3.inOut',
+        delay: 0.5
     });
 }
