@@ -264,14 +264,15 @@ section {
 }
 
 /* Scroll Animation Classes */
+/* GSAP now handles all reveals — override the old opacity:0 hiding */
 .scroll-animate {
-    opacity: 0;
+    opacity: 1;
     transition: none;
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity;
 }
 
 .scroll-animate[data-reveal] {
-    opacity: 0;
+    opacity: 1;
 }
 
 .scroll-animate.animate-in,

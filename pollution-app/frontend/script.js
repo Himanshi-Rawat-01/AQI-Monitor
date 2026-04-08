@@ -780,15 +780,29 @@ function initGSAPReveals() {
 
     // ── Hero: immediate entrance on load ──────────────────────────────────────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
+    const heroButtons = document.querySelectorAll('.hero .btn, .hero .hero-badge, .hero .hero-features-row, .hero .scroll-cue');
+
+    const heroTl = gsap.timeline({ delay: 0.1 });
+
     if (heroReveals.length) {
-        // Set initial state explicitly first
-        gsap.set(heroReveals, { y: 80, opacity: 0, scale: 0.75 });
-        gsap.to(heroReveals, {
+        // Start heading/desc invisible
+        gsap.set(heroReveals, { y: 60, opacity: 0, scale: 0.8 });
+        heroTl.to(heroReveals, {
             y: 0, opacity: 1, scale: 1,
-            duration: 0.85, stagger: 0.15, ease: 'back.out(1.4)', delay: 0.2,
+            duration: 0.75, stagger: 0.15, ease: 'back.out(1.4)',
             onComplete: () => startHeadingFloat(heroReveals)
         });
     }
+
+    if (heroButtons.length) {
+        // Start buttons invisible
+        gsap.set(heroButtons, { y: 30, opacity: 0 });
+        heroTl.to(heroButtons, {
+            y: 0, opacity: 1,
+            duration: 0.55, stagger: 0.1, ease: 'power2.out'
+        }, '-=0.3'); // overlap slightly with heading end
+    }
+
 
     // ── Section reveals: use 'top bottom' so snap scroll doesn't block them ──
     const sections = document.querySelectorAll('section:not(.hero)');
