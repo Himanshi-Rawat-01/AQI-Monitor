@@ -4018,3 +4018,70 @@ body.is-scrolling .process-bg-video {
 .auth-stagger-group > *:nth-child(6) { animation-delay: 0.6s; }
 .auth-stagger-group > *:nth-child(7) { animation-delay: 0.7s; }
 .auth-stagger-group > *:nth-child(8) { animation-delay: 0.8s; }
+
+/* ==================== AWWWARDS UI UPGRADES ==================== */
+/* 1. Cinematic Preloader */
+.gsap-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #080d14;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gsap-preloader .spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba(16, 185, 129, 0.15);
+    border-top: 3px solid #10b981;
+    border-radius: 50%;
+    animation: gsapSpin 0.9s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+}
+@keyframes gsapSpin { 100% { transform: rotate(360deg); } }
+
+/* 2. Tactile Button Ripple & Ambient Hover Glow */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+}
+/* Ensure the button jumps slightly off the page */
+.btn:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3), 0 0 20px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    transform: translateY(-2px) scale(1.02);
+}
+.btn-primary:hover {
+    border-color: rgba(16, 185, 129, 0.6);
+}
+.btn-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: rippleAnim 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    background: rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes rippleAnim {
+    to { transform: scale(3.5); opacity: 0; }
+}
+
+/* 3. Deep 3D Feature Card Elevated Hover */
+.feature-card, .process-card, .control-panel {
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease !important;
+}
+.feature-card:hover, .process-card:hover, .control-panel:hover {
+    transform: translateY(-8px) scale(1.015) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 35px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+    z-index: 10;
+}
+
+/* 4. Smart Auto-Hiding Navbar */
+.navbar {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, border-bottom 0.3s ease !important;
+}
+/* When scrolling down, push the navbar strictly out of the viewport */
+.navbar-hidden {
+    transform: translateY(-100%);
+}

@@ -80,16 +80,32 @@ function initNavbarScroll() {
     if (!navbar) return;
 
     let ticking = false;
+    let lastScrollY = window.pageYOffset;
     
     function updateNavbar() {
         const currentScroll = window.pageYOffset;
         
+        // Add solid glass background when scrolled
         if (currentScroll > 50) {
             navbar.classList.add('navbar-scrolled');
         } else {
             navbar.classList.remove('navbar-scrolled');
         }
+
+        // Smart auto-hide logic: Hide if scrolling down past 300px, show if scrolling up
+        if (currentScroll > 300) {
+            if (currentScroll > lastScrollY) {
+                // Scrolling down -> hide navbar
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scrolling up -> show navbar
+                navbar.classList.remove('navbar-hidden');
+            }
+        } else {
+            navbar.classList.remove('navbar-hidden');
+        }
         
+        lastScrollY = currentScroll;
         ticking = false;
     }
     
@@ -742,6 +758,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         initGSAPReveals();
         initLiveMotion();
+        initAwwwardsUI();
         
         console.log('AirSense initialized successfully');
     } catch (error) {
@@ -921,4 +938,74 @@ function initLiveMotion() {
             });
         }
     }, { passive: true });
+}
+
+/* ==================== AWWWARDS PREMIUM UI ==================== */
+function initAwwwardsUI() {
+    // 1. Cinematic Preloader Sequence
+    const preloader = document.querySelector('.gsap-preloader');
+    if (preloader) {
+        if (typeof gsap !== 'undefined') {
+            gsap.to(preloader, {
+                opacity: 0,
+                duration: 0.85,
+                ease: 'power2.inOut',
+                delay: 0.1,
+                onComplete: () => preloader.style.display = 'none'
+            });
+        } else {
+            preloader.style.display = 'none';
+        }
+    }
+
+    // 2. Tactile Button Ripple Interaction
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'btn-ripple';
+            
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x - size / 2}px`;
+            ripple.style.top = `${y - size / 2}px`;
+            
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    // 3. Smooth Page Transitions for HTML Internal Links
+    document.querySelectorAll('a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetAttr = this.getAttribute('target');
+            const href = this.getAttribute('href');
+            
+            // Skip JS triggers, hashes, external links, active tabs
+            if (!href || href.startsWith('#') || href.startsWith('java') || targetAttr === '_blank' || this.classList.contains('active')) return;
+            
+            // If it's a structural page navigation link, fade out
+            if (href.endsWith('.html') || (!href.includes('://') && !href.startsWith('mailto:'))) {
+                e.preventDefault();
+                if (typeof gsap !== 'undefined') {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'gsap-preloader';
+                    overlay.style.opacity = '0';
+                    document.body.appendChild(overlay);
+                    
+                    gsap.to(overlay, {
+                        opacity: 1,
+                        duration: 0.45,
+                        ease: 'power2.inOut',
+                        onComplete: () => window.location.href = href
+                    });
+                } else {
+                    window.location.href = href;
+                }
+            }
+        });
+    });
 }
