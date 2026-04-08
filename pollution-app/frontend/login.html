@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AQI-Monitor</title>
+    <link rel="icon" href="../uploads/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=20260301-dark">
+    <script src="config.js"></script>
+    <style>
+        /* ── Page background ── */
+        body {
+            background: #080d14;
+            position: relative;
+            overflow: hidden;
+        }
+        .auth-bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(16,185,129,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16,185,129,0.04) 1px, transparent 1px);
+            background-size: 56px 56px;
+            animation: gridScroll 40s linear infinite;
+        }
+        @keyframes gridScroll { to { background-position: 56px 56px; } }
+
+        .auth-orb {
+            position: fixed; border-radius: 50%; filter: blur(72px);
+            z-index: 0; pointer-events: none;
+        }
+        .orb-a {
+            width: 560px; height: 560px;
+            background: radial-gradient(circle, rgba(16,185,129,0.10), transparent 70%);
+            top: -180px; left: -180px;
+            animation: orbA 22s ease-in-out infinite;
+        }
+        .orb-b {
+            width: 460px; height: 460px;
+            background: radial-gradient(circle, rgba(6,182,212,0.08), transparent 70%);
+            bottom: -120px; right: -120px;
+            animation: orbB 28s ease-in-out infinite;
+        }
+        .orb-c {
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(99,102,241,0.07), transparent 70%);
+            top: 40%; left: 55%;
+            animation: orbC 18s ease-in-out infinite;
+        }
+        @keyframes orbA { 0%,100%{transform:translate(0,0)} 50%{transform:translate(55px,40px)} }
+        @keyframes orbB { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-45px,-55px)} }
+        @keyframes orbC { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.25)} }
+
+        /* ── Field icon wrapper ── */
+        .input-icon-wrap {
+            position: relative;
+        }
+        .input-icon-wrap .field-icon {
+            position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.3); font-size: 0.85rem; pointer-events: none;
+            transition: color 0.25s;
+        }
+        .input-icon-wrap input {
+            padding-left: 2.5rem !important;
+        }
+        .input-icon-wrap:focus-within .field-icon {
+            color: #10b981;
+        }
+
+        /* ── Password eye toggle ── */
+        .pwd-toggle {
+            position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.3); font-size: 0.85rem;
+            transition: color 0.2s; padding: 0; line-height: 1;
+        }
+        .pwd-toggle:hover { color: #10b981; }
+
+        .auth-stat-row {
+            display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap;
+        }
+        .auth-stat {
+            flex: 1; min-width: 80px;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 0.75rem; padding: 0.55rem 0.7rem;
+            text-align: center;
+        }
+        .auth-stat-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem; font-weight: 800;
+            color: #34d399; line-height: 1;
+        }
+        .auth-stat-lbl {
+            font-size: 0.62rem; color: rgba(255,255,255,0.45);
+            letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.2rem;
+        }
+
+        /* ── Live badge on branding ── */
+        .auth-live-badge {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 2rem; padding: 0.25rem 0.8rem;
+            font-size: 0.65rem; color: #34d399; letter-spacing: 0.08em;
+            text-transform: uppercase; margin-bottom: 0.7rem;
+        }
+        .live-dot {
+            width: 7px; height: 7px; border-radius: 50%; background: #34d399;
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.75)} }
+
+        /* ── Back to home link ── */
+        .back-home {
+            position: fixed; top: 80px; left: 1.5rem; z-index: 10;
+            display: flex; align-items: center; gap: 0.45rem;
+            font-size: 0.82rem; color: rgba(255,255,255,0.45);
+            text-decoration: none; transition: color 0.2s;
+        }
+        .back-home:hover { color: #34d399; }
+
+        /* ensure card sits above orbs */
+        .auth-container { z-index: 1; }
+        .navbar { position: relative; z-index: 10; }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="auth-bg-grid"></div>
+    <div class="auth-orb orb-a"></div>
+    <div class="auth-orb orb-b"></div>
+    <div class="auth-orb orb-c"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="nav-logo">
+                    <img src="../uploads/logo.png" alt="AirSense Logo" class="logo-icon" width="32" height="32">
+                    <span class="logo-text">AirSense - AQI Monitor</span>
+                </a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link active">Login</a></li>
+                <li class="nav-item"><a href="register.html" class="nav-link">Register</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Container -->
+    <div class="auth-container">
+        <div class="auth-card animate-fadeInScale" id="authCard">
+            <!-- Branding Section (Left) -->
+            <div class="auth-branding">
+                <div class="auth-branding-content">
+                    <div class="auth-live-badge">
+                        <div class="live-dot"></div> Live Monitoring Active
+                    </div>
+                    <div class="auth-brand-logo">🌍</div>
+                    <h2 class="auth-brand-title">Track Air Quality in Real-Time</h2>
+                    <p class="auth-brand-subtitle">Monitor pollution levels, get health advisories, and stay informed about the air you breathe.</p>
+                    <ul class="auth-features">
+                        <li>Live AQI data from 52+ Indian locations</li>
+                        <li>AI-powered air quality predictions</li>
+                        <li>Personalized health recommendations</li>
+                        <li>7-day pollution trend analysis</li>
+                        <li>Real-time alerts and notifications</li>
+                    </ul>
+                    <div class="auth-stat-row">
+                        <div class="auth-stat">
+                            <div class="auth-stat-val">52+</div>
+                            <div class="auth-stat-lbl">Cities</div>
+                        </div>
+                        <div class="auth-stat">
+                            <div class="auth-stat-val">24/7</div>
+                            <div class="auth-stat-lbl">Monitoring</div>
+                        </div>
+                        <div class="auth-stat">
+                            <div class="auth-stat-val">AI</div>
+                            <div class="auth-stat-lbl">Forecasts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Section (Right) -->
+            <div class="auth-form-section">
+
+                <!-- Tab switcher -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+                    <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+                </div>
+
+                <div class="auth-slider" id="authSlider">
+                    <div class="auth-panels">
+                        <!-- ── LOGIN PANEL (left) ── -->
+                        <div class="auth-panel" id="panelLogin">
+                            <h1 class="auth-title">Welcome Back</h1>
+                            <p class="auth-subtitle">Log in to track local air quality and alerts.</p>
+
+                            <form id="loginForm" class="auth-form">
+                                <div class="form-group">
+                                    <label for="loginEmail"><i class="fa fa-envelope" style="margin-right:0.4rem;opacity:0.6"></i>Email</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-at field-icon"></i>
+                                        <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
+                                    </div>
+                                    <span class="error-message" id="loginEmailError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword"><i class="fa fa-lock" style="margin-right:0.4rem;opacity:0.6"></i>Password</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-lock field-icon"></i>
+                                        <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                                        <button type="button" class="pwd-toggle" onclick="togglePwd('loginPassword',this)" tabindex="-1">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span class="error-message" id="loginPasswordError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                                        <label for="rememberMe">Remember me</label>
+                                    </div>
+                                </div>
+                                <div class="error-message" id="loginGeneralError"></div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fa fa-sign-in-alt" style="margin-right:0.5rem"></i>Log In
+                                </button>
+                            </form>
+                            <p class="auth-link">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign up</a></p>
+                        </div>
+
+                        <!-- ── SIGN UP PANEL (right) ── -->
+                        <div class="auth-panel" id="panelSignup">
+                            <h1 class="auth-title">Create Account</h1>
+                            <p class="auth-subtitle">Join AirSense for live AQI and clean-air guidance.</p>
+
+                            <form id="registerForm" class="auth-form">
+                                <div class="form-group">
+                                    <label for="regName"><i class="fa fa-user" style="margin-right:0.4rem;opacity:0.6"></i>Full Name</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-user field-icon"></i>
+                                        <input type="text" id="regName" name="name" placeholder="Enter your full name" required>
+                                    </div>
+                                    <span class="error-message" id="nameError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regEmail"><i class="fa fa-envelope" style="margin-right:0.4rem;opacity:0.6"></i>Email</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-at field-icon"></i>
+                                        <input type="email" id="regEmail" name="email" placeholder="Enter your email" required>
+                                    </div>
+                                    <span class="error-message" id="emailError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regPassword"><i class="fa fa-lock" style="margin-right:0.4rem;opacity:0.6"></i>Password</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-lock field-icon"></i>
+                                        <input type="password" id="regPassword" name="password" placeholder="Min 6 characters" required>
+                                        <button type="button" class="pwd-toggle" onclick="togglePwd('regPassword',this)" tabindex="-1">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span class="error-message" id="passwordError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regConfirmPassword"><i class="fa fa-lock" style="margin-right:0.4rem;opacity:0.6"></i>Confirm Password</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-lock field-icon"></i>
+                                        <input type="password" id="regConfirmPassword" name="confirmPassword" placeholder="Repeat your password" required>
+                                        <button type="button" class="pwd-toggle" onclick="togglePwd('regConfirmPassword',this)" tabindex="-1">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span class="error-message" id="confirmPasswordError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="regRole"><i class="fa fa-id-badge" style="margin-right:0.4rem;opacity:0.6"></i>Role</label>
+                                    <div class="input-icon-wrap">
+                                        <i class="fa fa-chevron-down field-icon" style="left:auto;right:0.9rem;transform:translateY(-50%)"></i>
+                                        <select id="regRole" name="role" required style="padding-left:1rem!important">
+                                            <option value="">-- Select Role --</option>
+                                            <option value="user">User</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                    <span class="error-message" id="roleError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="terms" name="terms" required>
+                                        <label for="terms">I agree to Terms and Conditions</label>
+                                    </div>
+                                    <span class="error-message" id="termsError"></span>
+                                </div>
+                                <div class="success-message" id="successMessage"></div>
+                                <div class="error-message" id="generalError"></div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fa fa-user-plus" style="margin-right:0.5rem"></i>Create Account
+                                </button>
+                            </form>
+                            <p class="auth-link">Already have an account? <a href="#" onclick="switchTab('login');return false;">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+    // ── Password visibility toggle ────────────────────────────────────────
+    function togglePwd(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon  = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    // ── Tab switcher with sliding transition ──────────────────────────────
+    function switchTab(tab) {
+        const isLogin = tab === 'login';
+        document.getElementById('authCard').classList.toggle('signup-active', !isLogin);
+        document.getElementById('authSlider').classList.toggle('signup-active', !isLogin);
+        document.getElementById('tabLogin').classList.toggle('active',  isLogin);
+        document.getElementById('tabSignup').classList.toggle('active', !isLogin);
+
+        if (!isLogin) {
+            const registerButton = document.querySelector('#registerForm button[type="submit"]');
+            if (registerButton) {
+                registerButton.disabled = false;
+                registerButton.textContent = 'Create Account';
+            }
+            const msg = document.getElementById('successMessage');
+            if (msg) msg.textContent = '';
+        }
+    }
+
+    // ── Login form ────────────────────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email    = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const rememberMe   = document.getElementById('rememberMe').checked;
+        const generalError = document.getElementById('loginGeneralError');
+        const loginButton  = this.querySelector('button[type="submit"]');
+
+        generalError.textContent = '';
+        if (!email)    { generalError.textContent = 'Email is required.';    return; }
+        if (!password) { generalError.textContent = 'Password is required.'; return; }
+
+        try {
+            if (typeof CONFIG === 'undefined' || !CONFIG.API_ENDPOINTS)
+                throw new Error('API configuration not loaded. Please refresh the page.');
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logging in...';
+
+            const res  = await fetch(CONFIG.API_ENDPOINTS.AUTH.LOGIN, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || data.message || `Server error ${res.status}.`);
+
+            if (data.access_token) {
+                const store = rememberMe ? localStorage : sessionStorage;
+                store.setItem('aqi_token', data.access_token);
+                store.setItem('aqi_user', JSON.stringify({ email: data.email, username: data.username }));
+                window.location.href = 'dashboard.html';
+            } else {
+                loginButton.disabled = false;
+                loginButton.textContent = 'Log In';
+                generalError.textContent = data.error || 'Login failed.';
+            }
+        } catch (err) {
+            loginButton.disabled = false;
+            loginButton.textContent = 'Log In';
+            generalError.textContent = err.message || 'Network error. Please try again.';
+        }
+    });
+
+    // ── Register form ─────────────────────────────────────────────────────
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        ['nameError','emailError','passwordError','confirmPasswordError','roleError','termsError','generalError','successMessage']
+            .forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+
+        const username        = document.getElementById('regName').value.trim();
+        const email           = document.getElementById('regEmail').value.trim();
+        const password        = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const role            = document.getElementById('regRole').value;
+        const terms           = document.getElementById('terms').checked;
+        const registerButton  = this.querySelector('button[type="submit"]');
+
+        let hasError = false;
+        if (!username)                       { document.getElementById('nameError').textContent = 'Name is required.';                         hasError = true; }
+        if (!email)                          { document.getElementById('emailError').textContent = 'Email is required.';                       hasError = true; }
+        if (!password || password.length < 6){ document.getElementById('passwordError').textContent = 'Password must be at least 6 chars.';    hasError = true; }
+        if (password !== confirmPassword)    { document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';         hasError = true; }
+        if (!role)                           { document.getElementById('roleError').textContent = 'Please select a role.';                     hasError = true; }
+        if (!terms)                          { document.getElementById('termsError').textContent = 'You must agree to the terms.';             hasError = true; }
+        if (hasError) return;
+
+        try {
+            if (typeof CONFIG === 'undefined' || !CONFIG.API_ENDPOINTS)
+                throw new Error('API configuration not loaded. Please refresh the page.');
+            registerButton.disabled = true;
+            registerButton.textContent = 'Creating account...';
+
+            const res  = await fetch(CONFIG.API_ENDPOINTS.AUTH.REGISTER, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password, role })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || data.message || `Server error ${res.status}.`);
+
+            document.getElementById('successMessage').textContent = 'Account created! Switching to login…';
+            registerButton.disabled = false;
+            registerButton.textContent = 'Create Account';
+            setTimeout(() => switchTab('login'), 1500);
+        } catch (err) {
+            registerButton.disabled = false;
+            registerButton.textContent = 'Create Account';
+            document.getElementById('generalError').textContent = err.message || 'Network error. Please try again.';
+        }
+    });
+    </script>
+</body>
+</html>

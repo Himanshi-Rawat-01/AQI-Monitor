@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Monitor</title>
+    <meta name="description" content="Monitor real-time air quality, trends, and health with AQI Monitor.">
+    <link rel="icon" href="../uploads/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="homepage" id="home">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="nav-logo">
+                    <img src="../uploads/logo.png" alt="AQI Monitor Logo" class="logo-icon" width="32" height="32">
+                    <span class="logo-text">AQI Monitor</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#features" class="nav-link">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="login.html" class="nav-link">About</a></li>
+                <li><a href="register.html" class="btn btn-nav-cta">Log in</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="heroTitle">
+        <video class="hero-video-bg" autoplay muted loop playsinline>
+            <source src="../uploads/bg1.mp4" type="video/mp4">
+        </video>
+        <div class="nature-center">
+            <h1 class="nature-title gsap-reveal" id="heroTitle"><span class="hero-title-accent">Breathe Better With AirSense</span></h1>
+            <p class="nature-desc gsap-reveal">Professional air quality monitoring with real-time tracking, guided action plans, and data-backed daily forecasts.</p>
+            <div class="nature-buttons">
+                <a href="login.html" class="btn btn-primary scroll-animate fade-in-up delay-200" id="startMonitoringBtn"><span class="btn-icon"><i class="fa fa-bolt"></i></span> Start Monitoring</a>
+                <a href="register.html" class="btn btn-secondary scroll-animate fade-in-up delay-300"><span class="btn-icon"><i class="fa fa-arrow-right"></i></span> Create Free Account</a>
+            </div>
+            <div class="hero-badge scroll-animate fade-in-up delay-400"><span class="badge-dot"></span> REAL-TIME AIR QUALITY MONITORING</div>
+            <div class="hero-features-row">
+                <div class="hero-feature-item"><span class="feature-icon"><i class="fa fa-check-circle"></i></span> 100% Free</div>
+                <div class="hero-feature-item"><span class="feature-icon"><i class="fa fa-clock-o"></i></span> Real-Time Data</div>
+                <div class="hero-feature-item"><span class="feature-icon"><i class="fa fa-magic"></i></span> AI-Powered</div>
+            </div>
+        </div>
+        <a class="scroll-cue animate-scroll-down" href="#features" aria-label="Scroll down to features">
+            <span>Scroll</span>
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features" data-reveal="slide-up">
+        <div class="section-shell section-shell-plain" data-reveal="fade">
+            <h2 class="section-title gsap-reveal" data-reveal="slide-up">Everything You Need</h2>
+            <p class="section-intro scroll-animate fade-in-up delay-100" data-reveal="fade">Designed for daily use by students, families, and professionals who need clear air-quality insights without technical complexity.</p>
+        </div>
+        <div class="feature-carousel-shell features-carousel" data-feature-carousel tabindex="0" aria-label="Features carousel">
+            <button type="button" class="feature-nav feature-nav-prev" data-feature-prev aria-label="Previous feature">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </button>
+            <div class="features-viewport">
+                <div class="features-grid" data-feature-track data-stagger>
+                    <div class="feature-card scroll-animate fade-in-up" data-reveal="blur-in" data-stagger-index="0">
+                <div class="feature-icon-badge"><i class="fa fa-user-circle" aria-hidden="true"></i></div>
+                <h3 class="feature-heading">User Accounts</h3>
+                <p class="feature-text">Register, log in, and manage your profile securely. Data is stored in MongoDB for privacy and reliability.</p>
+            </div>
+                    <div class="feature-card scroll-animate fade-in-up" data-reveal="blur-in" data-stagger-index="1">
+                <div class="feature-icon-badge"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
+                <h3 class="feature-heading">Live AQI Dashboard</h3>
+                <p class="feature-text">See real-time air quality for your city, powered by OpenWeather API.</p>
+            </div>
+                    <div class="feature-card scroll-animate fade-in-up" data-reveal="blur-in" data-stagger-index="2">
+                <div class="feature-icon-badge"><i class="fa fa-magic" aria-hidden="true"></i></div>
+                <h3 class="feature-heading">AI-Powered Forecasts</h3>
+                <p class="feature-text">Get tomorrow's AQI predictions using advanced analytics.</p>
+            </div>
+                    <div class="feature-card scroll-animate fade-in-up" data-reveal="blur-in" data-stagger-index="3">
+                <div class="feature-icon-badge"><i class="fa fa-heartbeat" aria-hidden="true"></i></div>
+                <h3 class="feature-heading">Health Guidance</h3>
+                <p class="feature-text">Personalized tips to protect your health based on current air quality.</p>
+            </div>
+                    <div class="feature-card scroll-animate fade-in-up" data-reveal="blur-in" data-stagger-index="4">
+                <div class="feature-icon-badge"><i class="fa fa-mobile" aria-hidden="true"></i></div>
+                <h3 class="feature-heading">Mobile Friendly</h3>
+                <p class="feature-text">Responsive design for seamless experience on any device.</p>
+            </div>
+                    <div class="feature-card scroll-animate fade-in-up" data-reveal="blur-in" data-stagger-index="5">
+                <div class="feature-icon-badge"><i class="fa fa-bell" aria-hidden="true"></i></div>
+                <h3 class="feature-heading">Smart Alerts</h3>
+                <p class="feature-text">Receive timely warnings when pollution rises and get practical recommendations to reduce exposure.</p>
+            </div>
+                </div>
+            </div>
+            <button type="button" class="feature-nav feature-nav-next" data-feature-next aria-label="Next feature">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </button>
+            <div class="feature-carousel-footer">
+                <div class="feature-dots" data-feature-dots aria-label="Feature slide selector"></div>
+                <p class="feature-slide-meta" data-feature-meta>Slide 1 of 1</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="process-section" id="how-it-works" data-reveal="slide-up">
+        <video class="process-bg-video" autoplay muted loop playsinline aria-hidden="true">
+            <source src="../uploads/bg5.mp4" type="video/mp4">
+        </video>
+        <div class="section-shell section-shell-plain" data-reveal="fade">
+            <h2 class="section-title gsap-reveal" data-reveal="slide-up">How It Works</h2>
+            <p class="section-intro scroll-animate fade-in-up delay-100" data-reveal="fade">A simple four-step flow turns raw air data into daily actions you can trust.</p>
+        </div>
+        <div class="process-timeline" data-process-timeline>
+            <div class="timeline-rail" aria-hidden="true">
+                <span class="timeline-rail-base"></span>
+                <span class="timeline-rail-progress"></span>
+            </div>
+            <article class="process-card timeline-card" data-timeline-step>
+                <span class="process-step-orb">01</span>
+                <h3>Collect</h3>
+                <p>We fetch live pollution metrics and weather context from trusted APIs in real time.</p>
+            </article>
+            <article class="process-card timeline-card" data-timeline-step>
+                <span class="process-step-orb">02</span>
+                <h3>Analyze</h3>
+                <p>The system interprets AQI trends and classifies risk levels for your selected location.</p>
+            </article>
+            <article class="process-card timeline-card" data-timeline-step>
+                <span class="process-step-orb">03</span>
+                <h3>Forecast</h3>
+                <p>AI-assisted forecasting predicts likely AQI movement for the next day.</p>
+            </article>
+            <article class="process-card timeline-card" data-timeline-step>
+                <span class="process-step-orb">04</span>
+                <h3>Guide</h3>
+                <p>You get practical health guidance and exposure reduction tips tailored to the current level.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="control-section" id="control-aqi">
+        <div class="section-shell section-shell-plain">
+            <h2 class="section-title gsap-reveal">How Do We Control AQI?</h2>
+            <p class="section-intro scroll-animate fade-in-up delay-100">Controlling AQI means reducing emissions at source and lowering personal exposure during high-pollution windows.</p>
+        </div>
+        <div class="control-layout">
+            <div class="control-panel scroll-animate fade-in-left">
+                <h3>Daily Personal Actions</h3>
+                <ul class="control-list" data-control-reveal>
+                    <li>Use public transport, carpool, or cycle when possible.</li>
+                    <li>Avoid outdoor workouts during peak traffic hours.</li>
+                    <li>Keep indoor air clean with ventilation and filtration.</li>
+                    <li>Track local AQI before planning school, work, or travel.</li>
+                </ul>
+            </div>
+            <div class="control-panel scroll-animate fade-in-right">
+                <h3>Community and Policy Actions</h3>
+                <ul class="control-list" data-control-reveal>
+                    <li>Strengthen emission standards for vehicles and industries.</li>
+                    <li>Scale clean energy adoption and dust-control measures.</li>
+                    <li>Increase urban green cover and monitor pollution hotspots.</li>
+                    <li>Use open air-quality data for transparent governance.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>About AQI Monitor</h4>
+                <p>Track air quality, get forecasts, and protect your health. Powered by MongoDB and OpenWeather API.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@aqimonitor.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AQI Monitor. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
