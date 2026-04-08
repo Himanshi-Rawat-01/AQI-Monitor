@@ -94,6 +94,11 @@ html {
     text-rendering: optimizeLegibility;
 }
 
+/* Apple-style full-page scroll-snap */
+html:has(.homepage) {
+    scroll-snap-type: y proximity;
+}
+
 section {
     min-height: 100vh;
     min-height: 100svh;
@@ -102,6 +107,13 @@ section {
     justify-content: center;
     overflow: hidden;
     position: relative;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.homepage .footer {
+    scroll-snap-align: end;
+    min-height: auto;
 }
 
 /* Videos only: GPU layer for smooth playback */
@@ -298,17 +310,10 @@ section {
 .delay-700 { animation-delay: 0.7s; }
 .delay-800 { animation-delay: 0.8s; }
 
-/* Section Snap Scrolling */
-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 /* Smooth scroll padding to account for fixed navbar */
 section[id] {
-    scroll-margin-top: 80px;
+    scroll-margin-top: 0;
 }
 
 body {

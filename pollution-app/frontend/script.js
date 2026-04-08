@@ -743,7 +743,6 @@ document.addEventListener('DOMContentLoaded', function () {
         initGSAPReveals();
         
         // Awwwards Upgrades
-        initPageLoader();
         initPageTransitions();
         initButtonRipples();
         
