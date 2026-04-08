@@ -818,16 +818,16 @@ function initGSAPReveals() {
 function initLiveMotion() {
     if (typeof gsap === 'undefined') return;
 
-    // 1. Ambient Air Particles (Deep background layer)
+    // 1. Ambient Air Particles (Soft Grey, Calm Drift)
     const particleContainer = document.createElement('div');
     particleContainer.className = 'live-particles-container';
     particleContainer.setAttribute('aria-hidden', 'true');
     particleContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100vh;pointer-events:none;z-index:1;overflow:hidden;';
     document.body.appendChild(particleContainer);
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 30; i++) {
         let p = document.createElement('div');
-        p.style.cssText = 'position:absolute;width:8px;height:8px;background:radial-gradient(circle, rgba(74,222,128,0.8) 0%, rgba(74,222,128,0) 70%);border-radius:50%;opacity:0;';
+        p.style.cssText = 'position:absolute;width:10px;height:10px;background:radial-gradient(circle, rgba(200,200,200,0.5) 0%, rgba(200,200,200,0) 70%);border-radius:50%;opacity:0;';
         particleContainer.appendChild(p);
 
         gsap.set(p, {
@@ -836,29 +836,31 @@ function initLiveMotion() {
             scale: "random(0.3, 2)"
         });
 
-        // Breathing & drifting dots
+        // Calm, extremely slow drift so they don't 'shiver'
         gsap.to(p, {
-            x: "+=random(-150, 150)",
-            y: "+=random(-150, 150)",
-            opacity: "random(0.2, 0.7)",
-            duration: "random(4, 12)",
+            x: "+=random(-50, 50)",
+            y: "+=random(-50, 50)",
+            opacity: "random(0.1, 0.5)",
+            duration: "random(15, 30)", 
             ease: "sine.inOut",
             repeat: -1,
             yoyo: true
         });
     }
 
-    // 2. Slow natural "Breathing" for hero layout
-    const mainTitle = document.querySelector('.nature-center');
-    if(mainTitle) {
-        gsap.to(mainTitle, {
-            y: 15,
-            duration: 3.5,
+    // 2. Slow natural "Breathing" for all headings to stay alive
+    const headings = document.querySelectorAll('.gsap-reveal, .nature-center');
+    headings.forEach(heading => {
+        gsap.to(heading, {
+            y: "+=8",
+            rotationZ: "random(-1, 1)",
+            duration: "random(3, 5)",
             ease: "sine.inOut",
             repeat: -1,
-            yoyo: true
+            yoyo: true,
+            delay: "random(0, 2)"
         });
-    }
+    });
 
     // 3. Immersive Mouse Parallax (Tilts cards and slightly pans videos)
     document.addEventListener("mousemove", (e) => {
