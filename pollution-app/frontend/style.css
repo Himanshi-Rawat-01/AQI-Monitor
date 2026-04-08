@@ -89,19 +89,14 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-    scroll-padding-top: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
 }
 
-/* Apple-style strict full-page snapping */
 section {
     min-height: 100vh;
     min-height: 100svh;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -109,23 +104,7 @@ section {
     position: relative;
 }
 
-/* ==================== GPU PERFORMANCE LAYER ==================== */
-/* Pre-promote animated elements to GPU composite layers */
-.gsap-reveal,
-.feature-card,
-.process-card,
-.timeline-card,
-.control-panel,
-.hero-video-bg,
-.process-bg-video,
-.nature-center,
-.scroll-cue {
-    will-change: transform, opacity;
-    /* Isolate layout so reflows don't cascade */
-    contain: layout style;
-}
-
-/* Videos: object-fit handles sizing, contain paint to stop repaints rippling */
+/* Videos only: GPU layer for smooth playback */
 .hero-video-bg,
 .process-bg-video {
     contain: strict;
@@ -4128,27 +4107,9 @@ body.page-transition-exit {
 
 /* ==================== PREMIUM VISUAL SYSTEMS ==================== */
 
-/* --- 1. Animated Gradient Shimmer on Hero Title --- */
+/* --- 1. Hero Title Accent (static white) --- */
 .hero-title-accent {
-    background: linear-gradient(
-        90deg,
-        #ffffff 0%,
-        #b0b8c1 25%,
-        #e0e4e8 50%,
-        #b0b8c1 75%,
-        #ffffff 100%
-    );
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmerGradient 6s ease-in-out infinite;
-}
-
-@keyframes shimmerGradient {
-    0%   { background-position: 100% 50%; }
-    50%  { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
+    color: #ffffff;
 }
 
 /* --- 2. Glowing Animated Border on Cards --- */
