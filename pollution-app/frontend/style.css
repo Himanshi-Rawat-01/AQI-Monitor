@@ -3522,14 +3522,6 @@ body.low-performance section {
     100% { background-position: 0% 50%, 180% 0%; }
 }
 
-.homepage .features-carousel .feature-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(8, 12, 16, 0.38) 0%, rgba(8, 12, 16, 0.56) 100%);
-    z-index: 1;
-    pointer-events: none;
-}
 
 .homepage .features-carousel .feature-card::after {
     content: '';
