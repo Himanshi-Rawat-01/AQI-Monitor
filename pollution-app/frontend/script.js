@@ -748,6 +748,11 @@ document.addEventListener('DOMContentLoaded', function () {
         initPageTransitions();
         initButtonRipples();
         
+        // Premium Visual Systems
+        initCursorGlow();
+        initSideNavDots();
+        initSectionRevealLines();
+        
         console.log('AirSense initialized successfully');
     } catch (error) {
         console.error('Initialization error:', error);
@@ -1003,4 +1008,93 @@ function initButtonRipples() {
             setTimeout(() => ripple.remove(), 700);
         });
     });
+}
+
+/* ==================== PREMIUM VISUAL SYSTEMS (JS) ==================== */
+
+// 1. Cursor Glow — soft ambient light follows the mouse
+function initCursorGlow() {
+    if (window.matchMedia('(pointer: coarse)').matches) return; // Skip on touch
+    
+    const glow = document.createElement('div');
+    glow.classList.add('cursor-glow');
+    document.body.appendChild(glow);
+    
+    let cx = 0, cy = 0, gx = 0, gy = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        cx = e.clientX;
+        cy = e.clientY;
+    }, { passive: true });
+    
+    // Smooth lerp follow (no GSAP needed, pure rAF)
+    function updateGlow() {
+        gx += (cx - gx) * 0.08;
+        gy += (cy - gy) * 0.08;
+        glow.style.left = gx + 'px';
+        glow.style.top = gy + 'px';
+        requestAnimationFrame(updateGlow);
+    }
+    requestAnimationFrame(updateGlow);
+}
+
+// 2. Side Navigation Dots — tracks which section is active
+function initSideNavDots() {
+    const sections = document.querySelectorAll('section');
+    if (sections.length < 2) return;
+    
+    // Build dot container
+    const container = document.createElement('nav');
+    container.classList.add('side-nav-dots');
+    container.setAttribute('aria-label', 'Page sections');
+    
+    const labels = ['Home', 'Features', 'Process', 'Control'];
+    
+    sections.forEach((section, i) => {
+        const dot = document.createElement('div');
+        dot.classList.add('side-dot');
+        dot.setAttribute('data-label', labels[i] || `Section ${i + 1}`);
+        dot.addEventListener('click', () => {
+            section.scrollIntoView({ behavior: 'smooth' });
+        });
+        container.appendChild(dot);
+    });
+    
+    document.body.appendChild(container);
+    
+    // Track active section with IntersectionObserver
+    const dots = container.querySelectorAll('.side-dot');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const idx = Array.from(sections).indexOf(entry.target);
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    sections.forEach(s => observer.observe(s));
+}
+
+// 3. Section Reveal Lines — glowing line expands at the top of each section
+function initSectionRevealLines() {
+    const sections = document.querySelectorAll('section:not(.hero)');
+    
+    sections.forEach(section => {
+        const line = document.createElement('div');
+        line.classList.add('section-reveal-line');
+        section.prepend(line);
+    });
+    
+    // Trigger lines on scroll
+    const lineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const line = entry.target.querySelector('.section-reveal-line');
+                if (line) line.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.3 });
+    
+    sections.forEach(s => lineObserver.observe(s));
 }
