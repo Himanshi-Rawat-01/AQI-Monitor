@@ -748,13 +748,6 @@ document.addEventListener('DOMContentLoaded', function () {
         initPageTransitions();
         initButtonRipples();
         
-        // Premium UI Layer
-        initLenisScroll();
-        initSmartNavbar();
-        initCustomCursor();
-        initScrollProgress();
-        initHeroMaskReveal();
-        
         console.log('AirSense initialized successfully');
     } catch (error) {
         console.error('Initialization error:', error);
@@ -788,32 +781,33 @@ function initGSAPReveals() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // ── Hero: fast, snappy entrance on load ──────────────────────────────────
+    // ── Hero: BIG dramatic entrance ──────────────────────────────────────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
-        gsap.fromTo(heroReveals,
-            { y: 80, opacity: 0, scale: 0.75 },
+        const tl = gsap.timeline({ delay: 0.2 });
+        tl.fromTo(heroReveals,
+            { y: 180, opacity: 0, scale: 0.4, rotationX: 35, filter: 'blur(12px)' },
             {
-                y: 0, opacity: 1, scale: 1,
-                duration: 0.85, stagger: 0.15, ease: 'back.out(1.4)', delay: 0.1,
+                y: 0, opacity: 1, scale: 1, rotationX: 0, filter: 'blur(0px)',
+                duration: 1.4, stagger: 0.25, ease: 'expo.out',
                 onComplete: () => startHeadingFloat(heroReveals)
             }
         );
     }
 
-    // ── Section reveals: fire-once, stays visible ────────────────────────────
+    // ── Section reveals: dramatic slide-up with rotation ─────────────────
     const sections = document.querySelectorAll('section:not(.hero)');
     sections.forEach(section => {
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals,
-                { y: 60, opacity: 0, scale: 0.8 },
+                { y: 120, opacity: 0, scale: 0.55, rotationX: 20, filter: 'blur(8px)' },
                 {
-                    y: 0, opacity: 1, scale: 1,
-                    duration: 0.7, stagger: 0.14, ease: 'back.out(1.4)',
+                    y: 0, opacity: 1, scale: 1, rotationX: 0, filter: 'blur(0px)',
+                    duration: 1.1, stagger: 0.2, ease: 'back.out(1.7)',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 82%',
+                        start: 'top 85%',
                         toggleActions: 'play none none none'
                     },
                     onComplete: () => startHeadingFloat(reveals)
@@ -821,34 +815,34 @@ function initGSAPReveals() {
             );
         }
 
-        // Cards pop-in
+        // Cards: dramatic 3D flip-in pop
         const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
         if (cards.length) {
             gsap.fromTo(cards,
-                { y: 70, opacity: 0, scale: 0.82 },
+                { y: 140, opacity: 0, scale: 0.6, rotationY: 25, rotationX: 15 },
                 {
-                    y: 0, opacity: 1, scale: 1,
-                    duration: 0.65, stagger: 0.1, ease: 'back.out(1.6)',
+                    y: 0, opacity: 1, scale: 1, rotationY: 0, rotationX: 0,
+                    duration: 1.0, stagger: 0.15, ease: 'back.out(2.0)',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 78%',
+                        start: 'top 80%',
                         toggleActions: 'play none none none'
                     }
                 }
             );
         }
 
-        // List items cascade
+        // List items: bold slide-in from left
         const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
         if (listItems.length) {
             gsap.fromTo(listItems,
-                { x: -50, opacity: 0 },
+                { x: -100, opacity: 0, scale: 0.8 },
                 {
-                    x: 0, opacity: 1,
-                    duration: 0.5, stagger: 0.08, ease: 'power3.out',
+                    x: 0, opacity: 1, scale: 1,
+                    duration: 0.7, stagger: 0.12, ease: 'back.out(1.4)',
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 73%',
+                        start: 'top 75%',
                         toggleActions: 'play none none none'
                     }
                 }
@@ -859,15 +853,16 @@ function initGSAPReveals() {
     ScrollTrigger.config({ limitCallbacks: true });
 }
 
-// Minimal float — only Y, no 3D rotation (no GPU compositing cost)
+// Visible continuous float — bigger motion so user always sees life
 function startHeadingFloat(elements) {
     gsap.to(elements, {
-        y: '+=8',
-        duration: 3.5,
+        y: '+=18',
+        rotationZ: 1.2,
+        duration: 3,
         ease: 'sine.inOut',
         repeat: -1,
         yoyo: true,
-        stagger: { each: 0.6, from: 'random' }
+        stagger: { each: 0.4, from: 'random' }
     });
 }
 
@@ -1016,142 +1011,5 @@ function initButtonRipples() {
             btn.appendChild(ripple);
             setTimeout(() => ripple.remove(), 700);
         });
-    });
-}
-
-/* ==================== PREMIUM UI: LENIS SMOOTH SCROLL ==================== */
-function initLenisScroll() {
-    if (typeof Lenis === 'undefined') return;
-
-    const lenis = new Lenis({
-        duration: 1.2,               // inertia duration
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // exponential ease-out
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 2,
-    });
-
-    // Connect Lenis to GSAP ScrollTrigger
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add((time) => lenis.raf(time * 1000));
-        gsap.ticker.lagSmoothing(0);
-    } else {
-        // Fallback RAF loop
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-    }
-}
-
-/* ==================== PREMIUM UI: SMART NAVBAR ==================== */
-function initSmartNavbar() {
-    const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
-
-    let lastScroll = 0;
-    let ticking = false;
-
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            requestAnimationFrame(() => {
-                const currentScroll = window.pageYOffset;
-                
-                // Hide on scroll down (past 80px), show on scroll up
-                if (currentScroll > 80 && currentScroll > lastScroll) {
-                    navbar.classList.add('navbar-hidden');
-                } else {
-                    navbar.classList.remove('navbar-hidden');
-                }
-
-                // Blur background when scrolled
-                if (currentScroll > 50) {
-                    navbar.classList.add('navbar-scrolled');
-                } else {
-                    navbar.classList.remove('navbar-scrolled');
-                }
-
-                lastScroll = currentScroll;
-                ticking = false;
-            });
-            ticking = true;
-        }
-    }, { passive: true });
-}
-
-/* ==================== PREMIUM UI: CUSTOM CURSOR ==================== */
-function initCustomCursor() {
-    // Only on devices with a fine pointer (no touchscreens)
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-
-    const cursor = document.getElementById('customCursor');
-    const dot = document.getElementById('customCursorDot');
-    if (!cursor || !dot) return;
-
-    document.body.classList.add('custom-cursor-active');
-
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        // Dot follows instantly
-        dot.style.left = mouseX + 'px';
-        dot.style.top = mouseY + 'px';
-    }, { passive: true });
-
-    // Outer ring follows with smooth lag (lerp)
-    function animateCursor() {
-        cursorX += (mouseX - cursorX) * 0.15;
-        cursorY += (mouseY - cursorY) * 0.15;
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        requestAnimationFrame(animateCursor);
-    }
-    requestAnimationFrame(animateCursor);
-
-    // Expand cursor on hoverable elements
-    const hoverTargets = document.querySelectorAll('a, button, .btn, .feature-card, .process-card, .nav-link, input, select');
-    hoverTargets.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-    });
-}
-
-/* ==================== PREMIUM UI: SCROLL PROGRESS BAR ==================== */
-function initScrollProgress() {
-    const fill = document.getElementById('scrollProgressFill');
-    if (!fill) return;
-
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        fill.style.width = progress + '%';
-    }, { passive: true });
-}
-
-/* ==================== PREMIUM UI: HERO TEXT MASK REVEAL ==================== */
-function initHeroMaskReveal() {
-    if (typeof gsap === 'undefined') return;
-
-    const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
-    if (!heroReveals.length) return;
-
-    // Set initial masked state
-    gsap.set(heroReveals, { clipPath: 'inset(0 100% 0 0)' });
-
-    // Animate mask open after loader fades (delay ~0.5s)
-    gsap.to(heroReveals, {
-        clipPath: 'inset(0 0% 0 0)',
-        duration: 1.0,
-        stagger: 0.2,
-        ease: 'power3.inOut',
-        delay: 0.5
     });
 }
