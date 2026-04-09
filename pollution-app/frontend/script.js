@@ -139,7 +139,7 @@ function initScrollToTop() {
     // Create scroll-to-top button
     const scrollBtn = document.createElement('button');
     scrollBtn.className = 'scroll-to-top';
-    scrollBtn.innerHTML = ' ';
+    scrollBtn.innerHTML = '<i class="fa fa-angle-up"></i>';
     scrollBtn.setAttribute('aria-label', 'Scroll to top');
     document.body.appendChild(scrollBtn);
 

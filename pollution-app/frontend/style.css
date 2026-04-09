@@ -3026,19 +3026,14 @@ body.low-performance section {
     opacity: 0.55;
 }
 
-/* Ultra smooth mode: keep reveal animations, remove continuous heavy loops */
+/* Ultra smooth mode: suppress heavy continuous card float, keep reveal animations and icon badges */
 body.smooth-mode .homepage .features-carousel .feature-card,
-body.smooth-mode .homepage .features-carousel .feature-card.is-leading,
-body.smooth-mode .homepage .features-carousel .feature-card .feature-icon-badge,
-body.smooth-mode .homepage .features-carousel .feature-card .feature-icon-badge i {
+body.smooth-mode .homepage .features-carousel .feature-card.is-leading {
     animation: none !important;
 }
 
-body.smooth-mode .hero-video-bg,
-body.smooth-mode .process-bg-video,
-body.smooth-mode .feature-card-bg-video {
-    filter: none !important;
-}
+/* Preserve intentional video filters (grayscale, brightness) in smooth-mode */
+/* Only skip feature-card-bg-video filters on low-performance devices */
 
 body.smooth-mode.low-performance .feature-card-bg-video {
     display: none !important;
