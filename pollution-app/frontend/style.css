@@ -2612,7 +2612,9 @@ body.low-performance section {
     text-transform: uppercase;
     font-size: 0.72rem;
     opacity: 0.9;
-    animation: scrollCueBounce 1.9s ease-in-out infinite;
+    animation: none;
+    transition: opacity 220ms ease, transform 220ms ease;
+    will-change: transform, opacity;
 }
 
 .scroll-cue i {
@@ -2623,6 +2625,12 @@ body.low-performance section {
     0%,
     100% { transform: translate(-50%, 0); }
     50% { transform: translate(-50%, 8px); }
+}
+
+.scroll-cue.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(6px);
 }
 
 .section-shell {
@@ -2996,7 +3004,9 @@ body.low-performance section {
 }
 
 .homepage .features-carousel .feature-card {
-    background: rgba(8, 12, 16, 0.34);
+    background:
+        linear-gradient(160deg, rgba(8, 12, 16, 0.72), rgba(8, 12, 16, 0.58)),
+        url('../uploads/bg4.jpg') center/cover no-repeat;
 }
 
 .homepage .features-carousel .feature-card > *:not(.feature-card-bg-video) {
@@ -3013,6 +3023,25 @@ body.low-performance section {
     z-index: 0;
     pointer-events: none;
     filter: grayscale(100%) contrast(1.05) brightness(0.62);
+    opacity: 0.55;
+}
+
+/* Ultra smooth mode: keep reveal animations, remove continuous heavy loops */
+body.smooth-mode .homepage .features-carousel .feature-card,
+body.smooth-mode .homepage .features-carousel .feature-card.is-leading,
+body.smooth-mode .homepage .features-carousel .feature-card .feature-icon-badge,
+body.smooth-mode .homepage .features-carousel .feature-card .feature-icon-badge i {
+    animation: none !important;
+}
+
+body.smooth-mode .hero-video-bg,
+body.smooth-mode .process-bg-video,
+body.smooth-mode .feature-card-bg-video {
+    filter: none !important;
+}
+
+body.smooth-mode.low-performance .feature-card-bg-video {
+    display: none !important;
 }
 
 .homepage .feature-card {
@@ -3576,9 +3605,14 @@ body.low-performance section {
     width: min(470px, calc(50% - 3.8rem));
     margin-bottom: 2.8rem;
     position: relative;
+    opacity: 1;
+    transform: none;
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.36s ease, box-shadow 0.28s ease;
+}
+
+.process-timeline.timeline-ready .timeline-card:not(.in-view) {
     opacity: 0;
     transform: translateY(46px) scale(0.96);
-    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.36s ease, box-shadow 0.28s ease;
 }
 
 .timeline-card:nth-of-type(odd) {
@@ -3805,11 +3839,8 @@ body.low-performance section {
     }
 }
 
-body.is-scrolling .homepage .section-title,
-body.is-scrolling .homepage .features-carousel .feature-card,
-body.is-scrolling .homepage .features-carousel .feature-card .feature-icon-badge,
-body.is-scrolling .homepage .features-carousel .feature-card .feature-icon-badge i,
-body.is-scrolling .timeline-card.is-active .process-step-orb::after {
+body.is-scrolling .timeline-card.is-active .process-step-orb::after,
+body.is-scrolling .animate-scroll-down {
     animation-play-state: paused !important;
 }
 
@@ -3823,9 +3854,7 @@ body.is-scrolling .section-shell {
 }
 
 body.is-scrolling .feature-card-bg-video,
-body.is-scrolling .process-bg-video {
-    filter: brightness(0.72) !important;
-}
+body.is-scrolling .process-bg-video { filter: none !important; }
 
 [data-stagger] > * {
     opacity: 1;
@@ -3943,16 +3972,6 @@ body.is-scrolling .process-bg-video {
     animation-delay: 2s;
 }
 
-/* Glowing Scroll Cues */
-@keyframes pulseGlow {
-    0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
-    50% { filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9)); }
-}
-
-.scroll-cue {
-    animation: pulseGlow 3s infinite ease-in-out;
-}
-
 /* ==================== WORD REVEAL ANIMATION (ENHANCED) ==================== */
 .split-word-reveal {
     opacity: 1 !important; /* Override typical animate-in hidden state */
@@ -3981,9 +4000,9 @@ body.is-scrolling .process-bg-video {
 
 /* ==================== CONTINUOUS SCROLL DOWN ANIMATION ==================== */
 @keyframes continuousScrollDownBounce {
-    0% { transform: translateY(0); filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
-    50% { transform: translateY(12px); filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9)); }
-    100% { transform: translateY(0); filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
+    0% { transform: translateX(-50%) translateY(0); opacity: 0.88; }
+    50% { transform: translateX(-50%) translateY(9px); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(0); opacity: 0.88; }
 }
 
 .animate-scroll-down {

@@ -19,9 +19,10 @@ function initMotionPreferences() {
 function initPerformanceMode() {
     const cpuCores = navigator.hardwareConcurrency || 8;
     const memoryGb = navigator.deviceMemory || 8;
-    const lowPowerDevice = cpuCores <= 4 || memoryGb <= 4 || window.innerWidth <= 1024;
+    const lowPowerDevice = cpuCores <= 6 || memoryGb <= 6 || window.innerWidth <= 1280;
 
     document.body.classList.toggle('low-performance', lowPowerDevice);
+    document.body.classList.add('smooth-mode');
 }
 
 /* ==================== HAMBURGER MENU ==================== */
@@ -296,8 +297,22 @@ function initFeatureCardVideoBackground() {
     const featureCards = document.querySelectorAll('#features .feature-card');
     if (!featureCards.length) return;
 
-    // Keep card videos on capable devices, but skip on low-performance setups.
-    const shouldSkipVideo = document.body.classList.contains('low-performance');
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const saveData = Boolean(connection && connection.saveData);
+    const cpuCores = navigator.hardwareConcurrency || 8;
+    const memoryGb = navigator.deviceMemory || 8;
+    const reducedMotion = document.body.classList.contains('reduced-motion');
+    const lowPerformance = document.body.classList.contains('low-performance');
+
+    // Extremely strict gating: enable card videos only on very high-end devices.
+    const shouldSkipVideo =
+        reducedMotion ||
+        lowPerformance ||
+        saveData ||
+        cpuCores < 12 ||
+        memoryGb < 16 ||
+        window.innerWidth < 1600;
+
     if (shouldSkipVideo) {
         return;
     }
@@ -349,6 +364,49 @@ function initFeatureCardVideoBackground() {
 
         cardVideos.forEach((video) => videoObserver.observe(video));
     }
+}
+
+/* ==================== BACKGROUND VIDEO PERFORMANCE ==================== */
+function initBackgroundVideoPerformance() {
+    const videos = Array.from(document.querySelectorAll('.hero-video-bg, .process-bg-video'));
+    if (!videos.length) return;
+
+    const reducedMotion = document.body.classList.contains('reduced-motion');
+    const lowPerformance = document.body.classList.contains('low-performance');
+
+    videos.forEach((video) => {
+        if (!(video instanceof HTMLVideoElement)) return;
+        video.preload = 'metadata';
+        if (reducedMotion) {
+            video.pause();
+            return;
+        }
+    });
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            const video = entry.target;
+            if (!(video instanceof HTMLVideoElement)) return;
+
+            if (reducedMotion || (lowPerformance && !entry.isIntersecting)) {
+                video.pause();
+                return;
+            }
+
+            if (entry.isIntersecting) {
+                video.play().catch(() => {});
+            } else {
+                video.pause();
+            }
+        });
+    }, {
+        threshold: 0.12,
+        rootMargin: '120px 0px'
+    });
+
+    videos.forEach((video) => observer.observe(video));
 }
 
 /* ==================== SCROLL PROGRESS BAR ==================== */
@@ -560,12 +618,18 @@ function initHeroScrollCue() {
     const cue = document.querySelector('.scroll-cue');
     if (!cue) return;
 
+    let ticking = false;
     const toggleCue = () => {
-        cue.style.opacity = window.scrollY > 120 ? '0' : '0.9';
-        cue.style.pointerEvents = window.scrollY > 120 ? 'none' : 'auto';
+        cue.classList.toggle('is-hidden', window.scrollY > 120);
+        ticking = false;
     };
 
-    window.addEventListener('scroll', toggleCue, { passive: true });
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(toggleCue);
+            ticking = true;
+        }
+    }, { passive: true });
     toggleCue();
 }
 
@@ -573,6 +637,8 @@ function initHeroScrollCue() {
 function initProcessTimeline() {
     const timeline = document.querySelector('[data-process-timeline]');
     if (!timeline) return;
+
+    timeline.classList.add('timeline-ready');
 
     const timelineSection = timeline.closest('.process-section');
 
@@ -642,7 +708,10 @@ function initProcessTimeline() {
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
+                    const index = steps.indexOf(entry.target);
+                    entry.target.style.transitionDelay = `${Math.max(0, index) * 90}ms`;
                     entry.target.classList.add('in-view');
+                    revealObserver.unobserve(entry.target);
                 }
             });
 
@@ -652,8 +721,8 @@ function initProcessTimeline() {
                 ticking = true;
             }
         }, {
-            threshold: 0.28,
-            rootMargin: '0px 0px -8% 0px'
+            threshold: 0.12,
+            rootMargin: '0px 0px -12% 0px'
         });
 
         steps.forEach((step) => revealObserver.observe(step));
@@ -736,7 +805,9 @@ document.addEventListener('DOMContentLoaded', function () {
             initControlPointReveal();
             initFeatureCarousel();
             initFeatureCardVideoBackground();
+            initBackgroundVideoPerformance();
             initScrollProgressBar();
+            initScrollPerformanceMode();
             initStartMonitoringButton();
         }
         
@@ -781,24 +852,29 @@ function initGSAPReveals() {
         return;
     }
 
+    const reduceMotion = document.body.classList.contains('reduced-motion');
+    const lowPerformance = document.body.classList.contains('low-performance');
+    if (reduceMotion || lowPerformance) {
+        return;
+    }
+
     gsap.registerPlugin(ScrollTrigger);
 
     // ── Hero: cinematic zoom-down from oversized (NO blur = zero lag) ────
     const heroReveals = document.querySelectorAll('.hero .gsap-reveal');
     if (heroReveals.length) {
-        const tl = gsap.timeline({ delay: 0.3 });
+        const tl = gsap.timeline({ delay: 0.2 });
         tl.fromTo(heroReveals[0] || heroReveals,
-            { scale: 2.5, opacity: 0, y: -50 },
-            { scale: 1, opacity: 1, y: 0, duration: 1.6, ease: 'expo.out' }
+            { scale: 1.16, opacity: 0, y: -24 },
+            { scale: 1, opacity: 1, y: 0, duration: 0.95, ease: 'power3.out' }
         );
         if (heroReveals.length > 1) {
             tl.fromTo(Array.from(heroReveals).slice(1),
-                { scale: 1.5, opacity: 0, y: 40 },
-                { scale: 1, opacity: 1, y: 0, duration: 1.0, stagger: 0.18, ease: 'expo.out' },
-                '-=0.9'
+                { scale: 1.08, opacity: 0, y: 20 },
+                { scale: 1, opacity: 1, y: 0, duration: 0.72, stagger: 0.12, ease: 'power3.out' },
+                '-=0.45'
             );
         }
-        tl.call(() => startHeadingFloat(heroReveals));
     }
 
     // ── Sections: oversized → normal (transform + opacity only) ──────────
@@ -808,36 +884,11 @@ function initGSAPReveals() {
         const reveals = section.querySelectorAll('.gsap-reveal');
         if (reveals.length) {
             gsap.fromTo(reveals,
-                { scale: 2.0, opacity: 0, y: -30 },
+                { scale: 1.12, opacity: 0, y: -20 },
                 {
                     scale: 1, opacity: 1, y: 0,
-                    duration: 1.2, stagger: 0.16, ease: 'expo.out',
-                    scrollTrigger: { trigger: section, start: 'top 90%', toggleActions: 'play none none none' },
-                    onComplete: () => startHeadingFloat(reveals)
-                }
-            );
-        }
-
-        const cards = section.querySelectorAll('.feature-card, .process-card, .timeline-card, .control-panel');
-        if (cards.length) {
-            gsap.fromTo(cards,
-                { scale: 1.6, opacity: 0, y: 60 },
-                {
-                    scale: 1, opacity: 1, y: 0,
-                    duration: 1.0, stagger: 0.12, ease: 'expo.out',
-                    scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none none' }
-                }
-            );
-        }
-
-        const listItems = section.querySelectorAll('.control-list li, [data-timeline-step]');
-        if (listItems.length) {
-            gsap.fromTo(listItems,
-                { scale: 1.3, x: -60, opacity: 0 },
-                {
-                    scale: 1, x: 0, opacity: 1,
-                    duration: 0.7, stagger: 0.09, ease: 'expo.out',
-                    scrollTrigger: { trigger: section, start: 'top 80%', toggleActions: 'play none none none' }
+                    duration: 0.75, stagger: 0.11, ease: 'power3.out',
+                    scrollTrigger: { trigger: section, start: 'top 88%', toggleActions: 'play none none none' }
                 }
             );
         }
@@ -846,8 +897,8 @@ function initGSAPReveals() {
     ScrollTrigger.config({ limitCallbacks: true });
 }
 
-// No continuous float — fire-once reveals only for zero lag
-function startHeadingFloat() { /* disabled for performance */ }
+// Scroll-linked parallax float for headings — GPU-friendly, no continuous loops
+function startHeadingFloat() { /* disabled for smooth scrolling */ }
 
 /* initLiveMotion disabled — particles, parallax, floats all caused lag */
 function initLiveMotion() { /* disabled for performance */ }
@@ -981,7 +1032,7 @@ function initSideNavDots() {
 
 // 3. Section Reveal Lines — glowing line expands at the top of each section
 function initSectionRevealLines() {
-    const sections = document.querySelectorAll('section:not(.hero)');
+    const sections = document.querySelectorAll('section:not(.hero):not(.control-section)');
     
     sections.forEach(section => {
         const line = document.createElement('div');
