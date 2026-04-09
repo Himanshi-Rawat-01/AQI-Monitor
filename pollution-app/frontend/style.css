@@ -3004,9 +3004,7 @@ body.low-performance section {
 }
 
 .homepage .features-carousel .feature-card {
-    background:
-        linear-gradient(160deg, rgba(8, 12, 16, 0.72), rgba(8, 12, 16, 0.58)),
-        url('../uploads/bg4.jpg') center/cover no-repeat;
+    background: rgba(8, 12, 16, 0.3);
 }
 
 .homepage .features-carousel .feature-card > *:not(.feature-card-bg-video) {
@@ -3022,8 +3020,8 @@ body.low-performance section {
     object-fit: cover;
     z-index: 0;
     pointer-events: none;
-    filter: grayscale(100%) contrast(1.05) brightness(0.62);
-    opacity: 0.55;
+    filter: brightness(0.55) contrast(1.08);
+    opacity: 1;
 }
 
 /* Ultra smooth mode: suppress heavy continuous card float, keep reveal animations and icon badges */

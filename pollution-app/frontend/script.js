@@ -304,14 +304,14 @@ function initFeatureCardVideoBackground() {
     const reducedMotion = document.body.classList.contains('reduced-motion');
     const lowPerformance = document.body.classList.contains('low-performance');
 
-    // Extremely strict gating: enable card videos only on very high-end devices.
+    // Gate card video backgrounds on low-end devices or user preferences.
     const shouldSkipVideo =
         reducedMotion ||
         lowPerformance ||
         saveData ||
-        cpuCores < 12 ||
-        memoryGb < 16 ||
-        window.innerWidth < 1600;
+        cpuCores < 4 ||
+        memoryGb < 4 ||
+        window.innerWidth < 768;
 
     if (shouldSkipVideo) {
         return;
@@ -818,7 +818,7 @@ document.addEventListener('DOMContentLoaded', function () {
         initButtonRipples();
         
         // Premium Visual Systems (CSS-powered, no continuous JS)
-        initSideNavDots();
+        // initSideNavDots(); // Removed
         initSectionRevealLines();
         
         console.log('AirSense initialized successfully');
