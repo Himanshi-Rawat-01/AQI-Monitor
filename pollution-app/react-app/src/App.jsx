@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -5, pointerEvents: 'none' }}>
-        <Galaxy />
+        <Galaxy transparent={false} />
       </div>
       <Routes>
         <Route path="/" element={<Home />} />

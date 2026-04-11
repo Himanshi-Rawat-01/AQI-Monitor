@@ -12,7 +12,22 @@ export default function Home() {
   useEffect(() => {
     document.title = 'AQI Monitor — Real-Time Air Quality'
     document.body.classList.add('homepage-body')
-    return () => document.body.classList.remove('homepage-body')
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('section-in-view')
+        }
+      })
+    }, { threshold: 0.15 })
+
+    const sections = document.querySelectorAll('section')
+    sections.forEach(sec => observer.observe(sec))
+
+    return () => {
+      document.body.classList.remove('homepage-body')
+      observer.disconnect()
+    }
   }, [])
 
   return (

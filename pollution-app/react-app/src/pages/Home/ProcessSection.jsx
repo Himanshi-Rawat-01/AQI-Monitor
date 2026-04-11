@@ -16,8 +16,6 @@ export default function ProcessSection() {
   useEffect(() => {
     if (videoRef.current) videoRef.current.play().catch(() => {})
   }, [])
-
-  // Timeline progress on scroll
   useEffect(() => {
     const handleScroll = () => {
       const timeline = timelineRef.current

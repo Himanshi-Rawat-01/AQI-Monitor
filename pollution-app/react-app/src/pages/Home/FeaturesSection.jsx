@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import useScrollReveal from '../../hooks/useScrollReveal'
 
 const FEATURES = [
   { icon: 'fa-chart-line', title: 'Live AQI Dashboard', text: "See real-time air quality for your city, powered by OpenWeather API." },
@@ -15,6 +16,7 @@ const FEATURES = [
 const CARDS_PER_VIEW = 3
 
 export default function FeaturesSection() {
+  const sectionRef = useScrollReveal({ threshold: 0.15 })
   const [currentIndex, setCurrentIndex] = useState(0)
   const gridRef = useRef(null)
   const totalPages = Math.ceil(FEATURES.length / CARDS_PER_VIEW)
@@ -42,13 +44,13 @@ export default function FeaturesSection() {
   const translateX = -(currentIndex * (100 / cardsPerView))
 
   return (
-    <section className="features" id="features">
-      <div className="section-shell section-shell-plain">
+    <section className="features" id="features" ref={sectionRef}>
+      <div className="section-shell section-shell-plain scroll-animate fade-in-up">
         <h2 className="section-title">Everything You Need</h2>
         <p className="section-intro">Designed for daily use by students, families, and professionals who need clear air-quality insights without technical complexity.</p>
       </div>
 
-      <div className="features-carousel">
+      <div className="features-carousel scroll-animate fade-in-up delay-200">
         <div className="features-viewport">
           <div
             className="features-grid"

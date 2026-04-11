@@ -13,7 +13,15 @@
   object-fit: cover;
   object-position: center;
   z-index: 0;
-  will-change: transform;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  will-change: transform, opacity;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
+}
+
+.hero-video-bg.video-loaded {
+  opacity: 1;
 }
 
 .nature-center {

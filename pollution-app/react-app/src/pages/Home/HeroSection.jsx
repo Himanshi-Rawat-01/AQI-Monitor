@@ -1,22 +1,40 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function HeroSection() {
   const videoRef = useRef(null)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(() => {})
     }
+
+    let ticking = false
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (videoRef.current) {
+             videoRef.current.style.transform = `translateY(${window.scrollY * 0.4}px)`
+          }
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <section className="hero" id="hero">
       <video
         ref={videoRef}
-        className="hero-video-bg"
+        className={`hero-video-bg ${isLoaded ? 'video-loaded' : ''}`}
         autoPlay muted loop playsInline
         preload="auto"
+        onLoadedData={() => setIsLoaded(true)}
       >
         <source src="/uploads/bg1.mp4" type="video/mp4" />
       </video>
