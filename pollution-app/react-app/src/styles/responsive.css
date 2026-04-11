@@ -1,0 +1,29 @@
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 900px) {
+  .timeline-rail { left: 28px; transform: none; }
+  .timeline-card { width: calc(100% - 82px); margin-left: 82px !important; margin-right: 0 !important; }
+  .timeline-card .process-step-orb { left: -72px !important; right: auto !important; width: 54px; height: 54px; font-size: 1.2rem; }
+  .features-carousel { padding: 0 3.9rem 2rem; }
+  .feature-card { flex: 0 0 calc((100% - 1.6rem) / 2); min-height: 330px; }
+  .control-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .hero { min-height: 88vh; padding-top: 6.4rem; }
+  .features, .process-section, .control-section { padding: 4rem 1rem; }
+  .features-carousel { padding: 0 3rem 1.6rem; }
+  .feature-card { flex: 0 0 100%; min-height: 300px; padding: 2rem 1.6rem; }
+  .feature-nav { width: 2.5rem; height: 2.5rem; }
+  .scroll-cue { bottom: 1rem; }
+  .nav-menu { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(15,20,25,0.95); padding: 1rem; }
+  .nav-menu.active { display: flex; }
+  .hamburger { display: flex; }
+  .auth-card { grid-template-columns: 1fr; }
+  .auth-branding { display: none; }
+  .auth-form-section { padding: 2rem 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .nature-buttons { flex-direction: column; align-items: center; }
+  .hero-features-row { flex-direction: column; }
+}

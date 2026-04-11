@@ -15,6 +15,23 @@ let charts      = {};     // keyed chart instances
 
 // ─── BOOT ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
+  // Auth check: redirect to login if no token found
+  const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token');
+  if (!token) {
+    window.location.href = '/login';
+    return;
+  }
+
+  // Display logged-in user info
+  try {
+    const userData = JSON.parse(localStorage.getItem('aqi_user') || sessionStorage.getItem('aqi_user') || '{}');
+    const userEl = document.getElementById('navUser');
+    if (userEl && userData.username) {
+      userEl.textContent = userData.username;
+      userEl.style.display = 'inline';
+    }
+  } catch {}
+
   setTimeout(() => {
     const l = document.getElementById('loading');
     l.style.opacity = '0';

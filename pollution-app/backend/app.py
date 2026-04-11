@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import io
 from dotenv import load_dotenv
 import traceback
+import certifi
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -370,7 +371,7 @@ if not MONGO_URI or '<' in MONGO_URI or '>' in MONGO_URI:
 else:
     try:
         # Use very short timeout for faster failure in test mode
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=2000, socketTimeoutMS=2000, tlsInsecure=True)
+        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000, socketTimeoutMS=5000, tls=True, tlsAllowInvalidCertificates=True)
         db = client.enviro
         # Try a quick ping to verify connection
         try:
@@ -1101,6 +1102,15 @@ def home() -> tuple[Response, Literal[200]]:
             'health': '/api/health'
         }
     }), 200
+
+# ==================== SERVE VANILLA FRONTEND FILES ====================
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), '..', 'frontend')
+
+@app.route('/frontend/<path:filename>')
+def serve_frontend(filename):
+    """Serve vanilla frontend files (dashboard, etc.)"""
+    from flask import send_from_directory
+    return send_from_directory(os.path.abspath(FRONTEND_DIR), filename)
 
 if __name__ == '__main__':
     print("\n" + "="*60)
