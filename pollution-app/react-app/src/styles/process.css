@@ -1,18 +1,12 @@
 /* ==================== PROCESS / HOW IT WORKS ==================== */
 .process-section { background: transparent; position: relative; overflow: hidden; padding: 5.5rem 1.5rem; isolation: isolate; }
 .process-section > *:not(.process-bg-video) { position: relative; z-index: 2; }
-.process-section::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8,8,8,0.56) 0%, rgba(8,8,8,0.52) 100%);
-  z-index: 1; pointer-events: none;
-}
 
 .process-bg-video {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover; z-index: 0;
   pointer-events: none;
-  filter: grayscale(100%) contrast(1.04) brightness(0.78);
   contain: strict; will-change: transform;
 }
 

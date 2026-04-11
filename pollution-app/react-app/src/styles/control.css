@@ -6,13 +6,7 @@
 .control-section::before {
   content: ''; position: absolute; inset: 0;
   background: url('/uploads/bg6.jpg') center/cover no-repeat;
-  filter: grayscale(100%) brightness(0.6) contrast(1.08);
   z-index: 0; pointer-events: none;
-}
-.control-section::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8,8,8,0.76) 0%, rgba(8,8,8,0.72) 100%);
-  z-index: 1; pointer-events: none;
 }
 .control-section > * { position: relative; z-index: 2; }
 

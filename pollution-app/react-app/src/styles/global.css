@@ -58,7 +58,7 @@ html:has(.homepage) {
 
 body {
   font-family: var(--font-primary);
-  background: #0f1419;
+  background: transparent;
   color: var(--text-primary);
   line-height: 1.65;
   font-size: 1rem;
@@ -69,25 +69,15 @@ body {
   position: relative;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: url('/uploads/bg2.jpg') center/cover no-repeat;
-  z-index: -5;
-  opacity: 1;
-}
+
 
 .homepage {
-  background: #0f1419;
+  background: transparent;
   color: #f4f6f8;
 }
 
 .homepage::before {
-  background:
-    linear-gradient(180deg, rgba(10,14,18,0.72) 0%, rgba(10,14,18,0.45) 100%),
-    url('/uploads/bg6.jpg') center/cover no-repeat;
+  background: url('/uploads/bg6.jpg') center/cover no-repeat;
   opacity: 1;
 }
 
