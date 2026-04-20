@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import useScrollReveal from '../../hooks/useScrollReveal'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const FEATURES = [
   { icon: 'fa-chart-line', title: 'Live AQI Dashboard', text: "See real-time air quality for your city, powered by OpenWeather API." },
@@ -16,20 +17,72 @@ const FEATURES = [
 const CARDS_PER_VIEW = 3
 
 export default function FeaturesSection() {
-  const sectionRef = useScrollReveal({ threshold: 0.15 })
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const sectionRef = useRef(null)
+  const headerRef = useRef(null)
   const gridRef = useRef(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [cardsPerView, setCardsPerView] = useState(CARDS_PER_VIEW)
+  
   const totalPages = Math.ceil(FEATURES.length / CARDS_PER_VIEW)
 
-  const goTo = useCallback((idx) => {
-    const clamped = Math.max(0, Math.min(idx, FEATURES.length - CARDS_PER_VIEW))
-    setCurrentIndex(clamped)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger)
+    }
+
+    const ctx = gsap.context(() => {
+      // Header Dynamic Scaling Entry
+      if (headerRef.current) {
+        gsap.from(headerRef.current, {
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 98%', 
+            end: 'top 50%', // Reached final size faster
+            scrub: 0.5,
+          },
+          scale: 1.4,
+          opacity: 0,
+          y: 40,
+          filter: 'blur(8px)',
+          ease: 'power2.out'
+        })
+      }
+
+      // Feature cards - staggered fluid reveal
+      const cards = gsap.utils.toArray('.feature-card')
+      if (cards.length > 0) {
+        gsap.from(cards, {
+          scrollTrigger: {
+            trigger: '.features-viewport',
+            start: 'top 95%',
+            end: 'top 60%',
+            scrub: 0.3,
+          },
+          y: 80,
+          opacity: 0,
+          rotationX: -20,
+          scale: 0.85,
+          stagger: {
+            each: 0.08,
+            from: "center"
+          },
+          ease: 'none',
+          clearProps: 'all'
+        })
+      }
+    }, sectionRef)
+
+    return () => ctx.revert()
   }, [])
 
-  const currentPage = Math.floor(currentIndex / CARDS_PER_VIEW)
+  const goTo = useCallback((idx) => {
+    const safeCardsPerView = cardsPerView || 1
+    const clamped = Math.max(0, Math.min(idx, FEATURES.length - safeCardsPerView))
+    setCurrentIndex(clamped)
+  }, [cardsPerView])
 
-  // Calculate responsive cards per view
-  const [cardsPerView, setCardsPerView] = useState(CARDS_PER_VIEW)
+  const currentPage = Math.floor(currentIndex / (cardsPerView || 1))
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) setCardsPerView(1)
@@ -41,17 +94,17 @@ export default function FeaturesSection() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const translateX = -(currentIndex * (100 / cardsPerView))
+  const translateX = -(currentIndex * (100 / (cardsPerView || 1)))
 
   return (
     <section className="features" id="features" ref={sectionRef}>
-      <div className="section-shell section-shell-plain scroll-animate fade-in-up">
+      <div className="section-shell section-shell-plain" ref={headerRef}>
         <h2 className="section-title">Everything You Need</h2>
         <p className="section-intro">Designed for daily use by students, families, and professionals who need clear air-quality insights without technical complexity.</p>
       </div>
 
-      <div className="features-carousel scroll-animate fade-in-up delay-200">
-        <div className="features-viewport">
+      <div className="features-carousel">
+        <div className="features-viewport perspective-container">
           <div
             className="features-grid"
             ref={gridRef}
@@ -61,7 +114,15 @@ export default function FeaturesSection() {
               <div
                 key={i}
                 className={`feature-card${i >= currentIndex && i < currentIndex + cardsPerView ? ' is-active-window' : ''}`}
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  const x = ((e.clientX - rect.left) / rect.width) * 100
+                  const y = ((e.clientY - rect.top) / rect.height) * 100
+                  e.currentTarget.style.setProperty('--mouse-x', `${x}%`)
+                  e.currentTarget.style.setProperty('--mouse-y', `${y}%`)
+                }}
               >
+                <div className="feature-glare"></div>
                 <div className="feature-icon-badge">
                   <i className={`fa ${f.icon}`}></i>
                 </div>

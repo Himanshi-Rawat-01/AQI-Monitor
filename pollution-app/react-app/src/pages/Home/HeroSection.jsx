@@ -1,45 +1,95 @@
-import { useRef, useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default function HeroSection() {
-  const videoRef = useRef(null)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const heroRef = useRef(null)
+  const contentRef = useRef(null)
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {})
-    }
+    gsap.registerPlugin(ScrollTrigger)
 
-    let ticking = false
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (videoRef.current) {
-             videoRef.current.style.transform = `translateY(${window.scrollY * 0.4}px)`
+    const ctx = gsap.context(() => {
+      // Hero title - Immersive scale-up effect
+      gsap.fromTo('.nature-title', 
+        { scale: 1, opacity: 1, y: 0 },
+        {
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: '+=600', // Faster completion
+            scrub: 0.4,   // Reduced lag
+          },
+          scale: 1.2,
+          opacity: 0,
+          y: 60,
+          ease: 'power1.inOut'
+        }
+      )
+
+      // Hero description & badge - Recede effect
+      gsap.fromTo(['.nature-desc', '.hero-badge', '.nature-buttons'],
+        { scale: 1, opacity: 1, y: 0 },
+        {
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: '+=500', 
+            scrub: 0.3,
+          },
+          scale: 0.9,
+          opacity: 0,
+          y: 40,
+          stagger: 0.05,
+          ease: 'power1.inOut'
+        }
+      )
+      // Magnetic Buttons Logic
+      const magneticBtns = document.querySelectorAll('.magnetic-btn')
+      magneticBtns.forEach(btn => {
+        const content = btn.querySelector('.btn-content')
+        
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect()
+          const x = e.clientX - rect.left - rect.width / 2
+          const y = e.clientY - rect.top - rect.height / 2
+          
+          gsap.to(btn, {
+            x: x * 0.35,
+            y: y * 0.35,
+            duration: 0.4,
+            ease: 'power2.out'
+          })
+          
+          if (content) {
+            gsap.to(content, {
+              x: x * 0.15,
+              y: y * 0.15,
+              duration: 0.4,
+              ease: 'power2.out'
+            })
           }
-          ticking = false
         })
-        ticking = true
-      }
-    }
+        
+        btn.addEventListener('mouseleave', () => {
+          gsap.to([btn, content], {
+            x: 0,
+            y: 0,
+            duration: 0.6,
+            ease: 'elastic.out(1.1, 0.4)'
+          })
+        })
+      })
+    })
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => ctx.revert()
   }, [])
 
   return (
-    <section className="hero" id="hero">
-      <video
-        ref={videoRef}
-        className={`hero-video-bg ${isLoaded ? 'video-loaded' : ''}`}
-        autoPlay muted loop playsInline
-        preload="auto"
-        onLoadedData={() => setIsLoaded(true)}
-      >
-        <source src="/uploads/bg1.mp4" type="video/mp4" />
-      </video>
+    <section className="hero" id="hero" ref={heroRef}>
 
-      <div className="nature-center">
+      <div className="nature-center" ref={contentRef}>
         <div className="hero-badge">
           <span className="badge-dot"></span>
           REAL-TIME AIR QUALITY MONITORING
@@ -54,11 +104,25 @@ export default function HeroSection() {
         </p>
 
         <div className="nature-buttons">
-          <Link to="/login" className="btn btn-primary">
-            <i className="fa fa-bolt btn-icon"></i> Start Monitoring
-          </Link>
-          <Link to="/register" className="btn btn-secondary">
-            <i className="fa fa-arrow-right btn-icon"></i> Create Free Account
+          <button 
+            onClick={() => {
+              const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token');
+              if (token) {
+                window.location.href = '/frontend/dashboard.html';
+              } else {
+                window.location.href = '/login';
+              }
+            }} 
+            className="btn btn-primary magnetic-btn"
+          >
+            <span className="btn-content">
+              <i className="fa fa-bolt btn-icon"></i> Start Monitoring
+            </span>
+          </button>
+          <Link to="/register" className="btn btn-secondary magnetic-btn">
+            <span className="btn-content">
+              <i className="fa fa-arrow-right btn-icon"></i> Create Free Account
+            </span>
           </Link>
         </div>
 

@@ -8,14 +8,13 @@ echo.
 
 cd backend
 
-REM Check if virtual environment exists
-if not exist "venv" (
-    echo Creating virtual environment...
-    python -m venv venv
+REM Activate root virtual environment
+call ..\..\.venv\Scripts\activate.bat
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Failed to activate virtual environment.
+    pause
+    exit /b 1
 )
-
-REM Activate virtual environment
-call venv\Scripts\activate
 
 REM Check if .env exists
 if not exist ".env" (

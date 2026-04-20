@@ -1,27 +1,8 @@
-/* ==================== HERO ==================== */
 .hero {
   min-height: 100vh;
   position: relative;
   isolation: isolate;
   padding: 7.5rem 1.5rem 4rem;
-}
-
-.hero-video-bg {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  object-fit: cover;
-  object-position: center;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 1.5s ease;
-  will-change: transform, opacity;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%);
-}
-
-.hero-video-bg.video-loaded {
-  opacity: 1;
 }
 
 .nature-center {

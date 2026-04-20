@@ -1,16 +1,10 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import CONFIG from '../config'
 
 export default function Login() {
   // Auto-redirect if already logged in (token in localStorage or sessionStorage)
-  useEffect(() => {
-    const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token')
-    if (token) {
-      window.location.href = '/frontend/dashboard.html'
-    }
-  }, [])
   const [activeTab, setActiveTab] = useState('login')
 
   // Login state
@@ -71,7 +65,7 @@ export default function Login() {
         const store = rememberMe ? localStorage : sessionStorage
         store.setItem('aqi_token', data.access_token)
         store.setItem('aqi_user', JSON.stringify({ email: data.email, username: data.username }))
-        window.location.href = '/frontend/dashboard.html'
+        window.location.replace('/frontend/dashboard.html')
       } else {
         setLoginError(data.error || 'Login failed.')
       }

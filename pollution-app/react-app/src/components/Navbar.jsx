@@ -25,8 +25,8 @@ export default function Navbar() {
         </div>
         <ul className={`nav-menu${menuOpen ? ' active' : ''}`} id="navMenu">
           <li className="nav-item"><Link to="/" className="nav-link">Home</Link></li>
-          <li className="nav-item"><Link to="/" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }), 100) }}>Features</Link></li>
-          <li className="nav-item"><Link to="/" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' }), 100) }}>Process</Link></li>
+          <li className="nav-item"><a href="/#features" className="nav-link">Features</a></li>
+          <li className="nav-item"><a href="/#process" className="nav-link">Process</a></li>
           <li className="nav-item"><Link to="/login" className="btn-nav-cta">Log in</Link></li>
         </ul>
         <button className={`hamburger${menuOpen ? ' active' : ''}`} onClick={toggleMenu} aria-label="Toggle menu">

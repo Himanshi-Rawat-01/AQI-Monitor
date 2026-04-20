@@ -9,9 +9,8 @@
   :root {
     --bg:#050a0f; --surface:#0a1520; --surface2:#0f1e2e;
     --border:rgba(0,200,255,0.12); --accent:#00c8ff; --accent2:#00ff9d;
-    --warn:#ffb800; --danger:#ff4444; --text:#e8f4ff; --muted:#5a7a9a;
-    --good:#00e676; --moderate:#ffee58; --unhealthy-sg:#ff9800;
-    --unhealthy:#f44336; --very-unhealthy:#9c27b0; --hazardous:#7c0000;
+    --text:#e8f4ff; --muted:#5a7a9a;
+    --good:#00e676;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
@@ -232,7 +231,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a class="logo" href="#">Air<span>Sense</span></a>
+    <a class="logo" href="/">Air<span>Sense</span></a>
     <ul class="nav-links">
       <li><a href="#" class="active" data-section="dashboard" onclick="showSection('dashboard',this)">Dashboard</a></li>
       <li><a href="#" data-section="forecast"  onclick="showSection('forecast',this)">Forecast</a></li>
@@ -525,14 +524,14 @@
 <script>
   (function() {
     const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token');
-    if (!token) { window.location.replace('login.html'); }
+    if (!token) { window.location.replace('/login'); }
   })();
   function logout() {
     localStorage.removeItem('aqi_token');
     localStorage.removeItem('aqi_user');
     sessionStorage.removeItem('aqi_token');
     sessionStorage.removeItem('aqi_user');
-    window.location.replace('login.html');
+    window.location.replace('/login');
   }
 </script>
 <!-- All logic -->

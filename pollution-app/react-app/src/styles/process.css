@@ -32,11 +32,9 @@
   width: min(470px, calc(50% - 3.8rem));
   margin-bottom: 2.8rem;
   position: relative;
-  opacity: 0;
-  transform: translateY(46px) scale(0.96);
-  transition: transform 0.45s cubic-bezier(0.22,0.61,0.36,1), opacity 0.36s ease;
+  /* Transitions and initial state now handled by GSAP */
+  will-change: transform, opacity;
 }
-.timeline-card.in-view { opacity: 1; transform: translateY(0) scale(1); }
 .timeline-card:nth-of-type(odd) { margin-right: auto; }
 .timeline-card:nth-of-type(even) { margin-left: auto; }
 .timeline-card.is-active { border-color: rgba(212,218,228,0.45); box-shadow: 0 24px 40px rgba(0,0,0,0.46), 0 0 24px rgba(212,218,228,0.22); }

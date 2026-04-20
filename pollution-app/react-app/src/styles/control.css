@@ -49,12 +49,10 @@
   color: rgba(233,239,245,0.9);
   font-size: 1.18rem;
   line-height: 1.72;
-  opacity: 0;
-  transform: translateY(26px) translateX(-8px) scale(0.98);
-  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
+  /* Transitions now handled by GSAP */
+  will-change: transform, opacity;
 }
-.control-list li.in-view { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
-.control-list li.in-view:hover { transform: translateX(6px); box-shadow: 0 8px 18px rgba(0,0,0,0.28); }
+.control-list li:hover { transform: translateX(6px); box-shadow: 0 8px 18px rgba(0,0,0,0.28); }
 
 .control-list li::before {
   counter-increment: control-point;

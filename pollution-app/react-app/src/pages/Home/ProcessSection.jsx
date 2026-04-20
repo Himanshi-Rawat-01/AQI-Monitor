@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
-import useScrollReveal from '../../hooks/useScrollReveal'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const STEPS = [
   { num: '01', title: 'Select Your City', desc: 'Choose from 52+ Indian cities to get hyper-local AQI readings. Our network covers major metros and growing towns.' },
@@ -9,25 +10,85 @@ const STEPS = [
 ]
 
 export default function ProcessSection() {
-  const sectionRef = useScrollReveal({ threshold: 0.1 })
+  const sectionRef = useRef(null)
+  const headerRef = useRef(null)
   const videoRef = useRef(null)
   const timelineRef = useRef(null)
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.play().catch(() => {})
-  }, [])
-  useEffect(() => {
-    const handleScroll = () => {
-      const timeline = timelineRef.current
-      if (!timeline) return
-      const rect = timeline.getBoundingClientRect()
-      const viewHeight = window.innerHeight
-      const progress = Math.min(1, Math.max(0, (viewHeight - rect.top) / (rect.height + viewHeight * 0.3)))
-      timeline.style.setProperty('--timeline-progress', progress)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
+    
+    gsap.registerPlugin(ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      // Header Dynamic Scaling reveal
+      if (headerRef.current) {
+        gsap.from(headerRef.current, {
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 98%',
+            end: 'top 60%',
+            scrub: 0.5
+          },
+          scale: 1.35,
+          opacity: 0,
+          y: 40,
+          filter: 'blur(10px)',
+          ease: 'power2.out'
+        })
+      }
+
+      // Video Parallax
+      gsap.to(videoRef.current, {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        },
+        y: 100,
+        scale: 1.1,
+        ease: 'none'
+      })
+
+      // Timeline Rail Progress
+      gsap.to(timelineRef.current, {
+        scrollTrigger: {
+          trigger: timelineRef.current,
+          start: 'top 85%',
+          end: 'bottom 70%',
+          scrub: 0.6, // Faster response
+        },
+        '--timeline-progress': 1,
+        ease: 'none'
+      })
+
+      // Timeline Cards Reveal
+      const cards = gsap.utils.toArray('.timeline-card')
+      cards.forEach((card, i) => {
+        gsap.fromTo(card, 
+          { 
+            opacity: 0, 
+            scale: 0.85, 
+            x: i % 2 === 0 ? -60 : 60 
+          },
+          {
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 92%',
+            },
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            duration: 1.2,
+            ease: 'back.out(1.1)',
+            clearProps: 'all'
+          }
+        )
+      })
+    })
+
+    return () => ctx.revert()
   }, [])
 
   return (
@@ -36,7 +97,7 @@ export default function ProcessSection() {
         <source src="/uploads/bg5.mp4" type="video/mp4" />
       </video>
 
-      <div className="section-shell section-shell-plain">
+      <div className="section-shell section-shell-plain" ref={headerRef}>
         <h2 className="section-title">How It Works</h2>
         <p className="section-intro">From selecting your city to receiving actionable insights — it takes less than 30 seconds.</p>
       </div>

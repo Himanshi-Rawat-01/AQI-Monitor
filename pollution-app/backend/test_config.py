@@ -24,12 +24,12 @@ def test_configuration() -> bool:
     elif '<' in mongo_uri or '>' in mongo_uri:
         errors.append("MONGO_URI contains placeholder values")
     else:
-        print("✓ MongoDB URI found")
+        print("[OK] MongoDB URI found")
         # Test connection
         try:
             client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
             client.server_info()
-            print("✓ MongoDB connection successful")
+            print("[OK] MongoDB connection successful")
             client.close()
         except Exception as e:
             errors.append(f"MongoDB connection failed: {str(e)}")
@@ -41,25 +41,25 @@ def test_configuration() -> bool:
     elif len(api_key) < 10:
         warnings.append("OPENWEATHER_API_KEY appears invalid")
     else:
-        print("✓ OpenWeather API key found")
+        print("[OK] OpenWeather API key found")
     
     # Test JWT Secret
     jwt_secret: str | None = os.environ.get('JWT_SECRET_KEY')
     if not jwt_secret:
         warnings.append("JWT_SECRET_KEY not found (using default)")
     else:
-        print("✓ JWT secret key found")
+        print("[OK] JWT secret key found")
     
     # Print results
     print("-" * 50)
     
     if warnings:
-        print("\n⚠ WARNINGS:")
+        print("\n[WARNINGS]:")
         for w in warnings:
             print(f"  - {w}")
     
     if errors:
-        print("\n✗ ERRORS:")
+        print("\n[ERRORS]:")
         for e in errors:
             print(f"  - {e}")
         print("\n[FAILED] Configuration test failed!")

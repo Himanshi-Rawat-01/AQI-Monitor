@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 import io
 from dotenv import load_dotenv
 import traceback
-import certifi
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -26,8 +25,6 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
-
-print("[*] Initializing AQI Monitor Backend...")
 
 # --- Chart Styling Constants ---
 DARK_BG = '#181a1b'
@@ -1043,7 +1040,7 @@ def predict_aqi() -> tuple[Response, Literal[200]] | tuple[Response, Literal[400
 @app.route('/api/generate-history', methods=['POST'])
 def generate_history() -> tuple[Response, Literal[200]] | tuple[Response, Literal[500]]:
     """Generate sample historical data for testing predictions"""
-    city: os.Any | str = request.json.get('city', 'Delhi') if request.json else 'Delhi'
+    city: Any | str = request.json.get('city', 'Delhi') if request.json else 'Delhi'
     
     try:
 
@@ -1104,33 +1101,25 @@ def home() -> tuple[Response, Literal[200]]:
     }), 200
 
 # ==================== SERVE VANILLA FRONTEND FILES ====================
-FRONTEND_DIR = os.path.join(os.path.dirname(__file__), '..', 'frontend')
+# ==================== SERVE VANILLA FRONTEND FILES ====================
+# Ensure the path is absolute and correctly resolves relative to this file
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
 
 @app.route('/frontend/<path:filename>')
 def serve_frontend(filename):
     """Serve vanilla frontend files (dashboard, etc.)"""
     from flask import send_from_directory
-    return send_from_directory(os.path.abspath(FRONTEND_DIR), filename)
+    try:
+        # Check if requested path is a directory, if so, look for index.html
+        requested_path = os.path.join(FRONTEND_DIR, filename)
+        if os.path.isdir(requested_path):
+            return send_from_directory(requested_path, 'index.html')
+        return send_from_directory(FRONTEND_DIR, filename)
+    except Exception as e:
+        print(f"[ERROR] Failed to serve frontend file {filename}: {e}")
+        return jsonify({"error": "File not found", "path": filename}), 404
+
 
 if __name__ == '__main__':
-    print("\n" + "="*60)
-    print("AQI MONITOR BACKEND SERVER")
-    print("="*60)
-    print(f"MongoDB: {'Connected' if MONGO_AVAILABLE else 'Not connected (using simulated data)'}")
-    print(f"OpenWeather API: {'Configured' if OPENWEATHER_API_KEY and OPENWEATHER_API_KEY != 'your_api_key_here' else 'Not configured (using simulated data)'}")
-    print(f"\nServer: http://localhost:5000")
-    print(f"\nEndpoints:")
-    print(f"  POST /api/register")
-    print(f"  POST /api/login")
-    print(f"  GET  /api/aqi")
-    print(f"  POST /api/predict")
-    print(f"  GET  /api/chart/*")
-    print(f"  GET  /api/health")
-    print("="*60)
-    if not OPENWEATHER_API_KEY or OPENWEATHER_API_KEY == 'your_api_key_here':
-        print("\nWARNING: OpenWeatherMap API key not configured")
-        print("Get free key: https://openweathermap.org/api")
-        print("Add to backend/.env file")
-        print("="*60)
     print("\nPress Ctrl+C to stop\n")
     app.run(debug=False, port=5000, host='127.0.0.1')
