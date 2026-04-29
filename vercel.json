@@ -27,8 +27,11 @@
       "dest": "pollution-app/react-app/dashboard/index.html"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
-      "dest": "pollution-app/react-app/$1"
+      "dest": "pollution-app/react-app/index.html"
     }
   ]
 }
