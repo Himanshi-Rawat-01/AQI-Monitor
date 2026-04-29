@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import AuthBackground from '../components/AuthBackground'
 import CONFIG from '../config'
@@ -32,7 +32,10 @@ function BrandingContent() {
 export default function Login() {
   const [activeTab,   setActiveTab]   = useState('login')
   const [isSwitching, setIsSwitching] = useState(false)
-  const [switchDir,   setSwitchDir]   = useState('right')
+  const switchTimerRef = useRef(null)   // track timeout for cleanup
+
+  // Clean up switch timer on unmount
+  useEffect(() => () => clearTimeout(switchTimerRef.current), [])
 
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
@@ -55,9 +58,9 @@ export default function Login() {
 
   const switchTab = useCallback((tab) => {
     if (tab === activeTab || isSwitching) return
-    setSwitchDir(tab === 'signup' ? 'right' : 'left')
     setIsSwitching(true)
-    setTimeout(() => setIsSwitching(false), 700)
+    clearTimeout(switchTimerRef.current)
+    switchTimerRef.current = setTimeout(() => setIsSwitching(false), 700)
     setActiveTab(tab)
     setLoginError('')
     setRegErrors({})
@@ -111,7 +114,12 @@ export default function Login() {
       catch { throw new Error(`Server error (HTTP ${res.status}). Is the backend running?`) }
       if (!res.ok) throw new Error(data.error || data.message || `Server error ${res.status}`)
       setRegSuccess('Account created! Switching to login…')
-      setTimeout(() => switchTab('login'), 1500)
+      // Use setActiveTab directly — avoids stale switchTab closure in setTimeout
+      switchTimerRef.current = setTimeout(() => {
+        setActiveTab('login')
+        setRegSuccess('')
+        setRegErrors({})
+      }, 1500)
     } catch (err) { setRegErrors({ general: err.message || 'Network error.' }) }
     finally { setRegLoading(false) }
   }

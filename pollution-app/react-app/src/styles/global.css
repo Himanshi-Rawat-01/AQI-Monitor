@@ -53,10 +53,6 @@ html {
   background: #000000;
 }
 
-html:has(.homepage) {
-  /* Scroll snap removed for fluid experience */
-}
-
 body {
   font-family: var(--font-primary);
   background: transparent;
@@ -92,10 +88,6 @@ section {
   position: relative;
   /* Transitions now handled by GSAP */
   will-change: transform, opacity;
-}
-
-section.section-in-view {
-  /* Intersection observer visibility - kept as fallback or removed if GSAP handles all */
 }
 
 section[id] { scroll-margin-top: 0; }
