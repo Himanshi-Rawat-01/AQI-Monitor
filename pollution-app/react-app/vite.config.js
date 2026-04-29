@@ -6,24 +6,11 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true, // Fail if 3000 is occupied
-    host: '127.0.0.1', // Bind to IPv4 explicitly
+    host: '0.0.0.0',
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:5001',
-        changeOrigin: true,
-      },
-      '/dashboard': {
-        target: 'http://127.0.0.1:5001',
-        changeOrigin: true,
-        timeout: 60000,
-        proxyTimeout: 60000,
-      },
-      '/frontend': {
-        target: 'http://127.0.0.1:5001',
-        changeOrigin: true,
-        timeout: 60000,
-        proxyTimeout: 60000,
-      }
+      '/api': 'http://127.0.0.1:5001',
+      '/dashboard': 'http://127.0.0.1:5001',
+      '/frontend': 'http://127.0.0.1:5001'
     }
   },
   build: {
