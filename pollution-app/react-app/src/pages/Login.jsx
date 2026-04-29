@@ -160,14 +160,14 @@ export default function Login() {
                   <label><i className="fa fa-envelope" /> Email</label>
                   <div className="input-icon-wrap">
                     <i className="fa fa-at field-icon" />
-                    <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="Enter your email" required />
+                    <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="Enter your email" required autoComplete="email" />
                   </div>
                 </div>
                 <div className="form-group">
                   <label><i className="fa fa-lock" /> Password</label>
                   <div className="input-icon-wrap">
                     <i className="fa fa-lock field-icon" />
-                    <input type={showLoginPwd ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} placeholder="Enter your password" required />
+                    <input type={showLoginPwd ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} placeholder="Enter your password" required autoComplete="current-password" />
                     <button type="button" className="pwd-toggle" onClick={() => setShowLoginPwd(v => !v)} tabIndex="-1">
                       <i className={`fa ${showLoginPwd ? 'fa-eye-slash' : 'fa-eye'}`} />
                     </button>
@@ -201,7 +201,7 @@ export default function Login() {
                   <label><i className="fa fa-user" /> Full Name</label>
                   <div className="input-icon-wrap">
                     <i className="fa fa-user field-icon" />
-                    <input type="text" value={regName} onChange={e => setRegName(e.target.value)} placeholder="Enter your full name" required />
+                    <input type="text" value={regName} onChange={e => setRegName(e.target.value)} placeholder="Enter your full name" required autoComplete="name" />
                   </div>
                   {regErrors.name && <span className="error-message">{regErrors.name}</span>}
                 </div>
@@ -209,7 +209,7 @@ export default function Login() {
                   <label><i className="fa fa-envelope" /> Email</label>
                   <div className="input-icon-wrap">
                     <i className="fa fa-at field-icon" />
-                    <input type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} placeholder="Enter your email" required />
+                    <input type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} placeholder="Enter your email" required autoComplete="email" />
                   </div>
                   {regErrors.email && <span className="error-message">{regErrors.email}</span>}
                 </div>
@@ -218,7 +218,7 @@ export default function Login() {
                     <label><i className="fa fa-lock" /> Password</label>
                     <div className="input-icon-wrap">
                       <i className="fa fa-lock field-icon" />
-                      <input type={showRegPwd ? 'text' : 'password'} value={regPassword} onChange={e => setRegPassword(e.target.value)} placeholder="Min 6 chars" required />
+                      <input type={showRegPwd ? 'text' : 'password'} value={regPassword} onChange={e => setRegPassword(e.target.value)} placeholder="Min 6 chars" required autoComplete="new-password" />
                       <button type="button" className="pwd-toggle" onClick={() => setShowRegPwd(v => !v)} tabIndex="-1"><i className={`fa ${showRegPwd ? 'fa-eye-slash' : 'fa-eye'}`} /></button>
                     </div>
                     {regErrors.password && <span className="error-message">{regErrors.password}</span>}
@@ -227,7 +227,7 @@ export default function Login() {
                     <label><i className="fa fa-lock" /> Confirm</label>
                     <div className="input-icon-wrap">
                       <i className="fa fa-lock field-icon" />
-                      <input type={showRegConfirmPwd ? 'text' : 'password'} value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} placeholder="Repeat password" required />
+                      <input type={showRegConfirmPwd ? 'text' : 'password'} value={regConfirmPassword} onChange={e => setRegConfirmPassword(e.target.value)} placeholder="Repeat password" required autoComplete="new-password" />
                       <button type="button" className="pwd-toggle" onClick={() => setShowRegConfirmPwd(v => !v)} tabIndex="-1"><i className={`fa ${showRegConfirmPwd ? 'fa-eye-slash' : 'fa-eye'}`} /></button>
                     </div>
                     {regErrors.confirmPassword && <span className="error-message">{regErrors.confirmPassword}</span>}

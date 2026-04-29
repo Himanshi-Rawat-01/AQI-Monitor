@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -24,6 +24,8 @@ function App() {
         <Route path="/" element={<Home setPlasmaColor={setPlasmaColor} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Navigate to="/frontend/dashboard.html" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   )

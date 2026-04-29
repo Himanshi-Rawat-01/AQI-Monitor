@@ -90,6 +90,11 @@ export const Plasma = ({
 }) => {
   const containerRef = useRef(null);
   const mousePos = useRef({ x: 0, y: 0 });
+  const propsRef = useRef({ color, speed, direction, scale, opacity, mouseInteractive });
+
+  useEffect(() => {
+    propsRef.current = { color, speed, direction, scale, opacity, mouseInteractive };
+  }, [color, speed, direction, scale, opacity, mouseInteractive]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -138,7 +143,7 @@ export const Plasma = ({
     const uniforms = program.uniforms;
 
     const handleMouseMove = e => {
-      if (!mouseInteractive) return;
+      if (!propsRef.current.mouseInteractive) return;
       const rect = containerRef.current.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left;
       mousePos.current.y = e.clientY - rect.top;
@@ -167,6 +172,7 @@ export const Plasma = ({
     const t0 = performance.now();
     const loop = t => {
       let timeValue = (t - t0) * 0.001;
+      const { color, speed, direction, scale, opacity } = propsRef.current;
       
       // Sync Uniforms from props if changed
       if (uniforms.uOpacity.value !== opacity) uniforms.uOpacity.value = opacity;
@@ -211,6 +217,7 @@ export const Plasma = ({
         // Silently fail if already removed
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run on mount
 
   return <div ref={containerRef} className="plasma-container" />;

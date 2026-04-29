@@ -93,7 +93,7 @@ export default function Register() {
                 <label><i className="fa fa-user" style={{ marginRight: '0.4rem', opacity: 0.6 }}></i>Full Name</label>
                 <div className="input-icon-wrap">
                   <i className="fa fa-user field-icon"></i>
-                  <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your full name" required />
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your full name" required autoComplete="name" />
                 </div>
                 {errors.name && <span className="error-message">{errors.name}</span>}
               </div>
@@ -101,7 +101,7 @@ export default function Register() {
                 <label><i className="fa fa-envelope" style={{ marginRight: '0.4rem', opacity: 0.6 }}></i>Email</label>
                 <div className="input-icon-wrap">
                   <i className="fa fa-at field-icon"></i>
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter your email" required />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter your email" required autoComplete="email" />
                 </div>
                 {errors.email && <span className="error-message">{errors.email}</span>}
               </div>
@@ -109,7 +109,7 @@ export default function Register() {
                 <label><i className="fa fa-lock" style={{ marginRight: '0.4rem', opacity: 0.6 }}></i>Password</label>
                 <div className="input-icon-wrap">
                   <i className="fa fa-lock field-icon"></i>
-                  <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Min 6 characters" required />
+                  <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Min 6 characters" required autoComplete="new-password" />
                   <button type="button" className="pwd-toggle" onClick={() => setShowPwd(!showPwd)} tabIndex="-1"><i className={`fa ${showPwd ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
                 </div>
                 {errors.password && <span className="error-message">{errors.password}</span>}
@@ -118,7 +118,7 @@ export default function Register() {
                 <label><i className="fa fa-lock" style={{ marginRight: '0.4rem', opacity: 0.6 }}></i>Confirm Password</label>
                 <div className="input-icon-wrap">
                   <i className="fa fa-lock field-icon"></i>
-                  <input type={showConfirmPwd ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Repeat your password" required />
+                  <input type={showConfirmPwd ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Repeat your password" required autoComplete="new-password" />
                   <button type="button" className="pwd-toggle" onClick={() => setShowConfirmPwd(!showConfirmPwd)} tabIndex="-1"><i className={`fa ${showConfirmPwd ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
                 </div>
                 {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
