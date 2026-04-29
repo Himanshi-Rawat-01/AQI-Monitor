@@ -1,0 +1,69 @@
+/* ==================== CONTROL SECTION ==================== */
+.control-section {
+  background: transparent; position: relative; overflow: hidden;
+  padding: 5.5rem 1.5rem; isolation: isolate;
+}
+.control-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: url('/uploads/bg6.jpg') center/cover no-repeat;
+  z-index: 0; pointer-events: none;
+}
+.control-section > * { position: relative; z-index: 2; }
+
+.control-layout {
+  max-width: 1160px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.4rem;
+}
+
+.control-panel {
+  background: none; border: 0; box-shadow: none;
+  padding: 0.2rem 0.15rem; text-align: left;
+}
+.control-panel h3 {
+  color: #f2f5f8;
+  font-family: var(--font-display);
+  font-size: 1.95rem; font-weight: 800;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 0 14px rgba(255,255,255,0.25);
+}
+
+.control-list {
+  list-style: none; margin: 0; padding: 0;
+  counter-reset: control-point; position: relative;
+}
+.control-list::before {
+  content: ''; position: absolute;
+  left: 1rem; top: 0.4rem; bottom: 0.6rem;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.08));
+  opacity: 0.7;
+}
+
+.control-list li {
+  position: relative;
+  padding: 0.75rem 0.85rem 0.75rem 2.6rem;
+  margin-bottom: 0.72rem;
+  border-radius: 0.8rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(233,239,245,0.9);
+  font-size: 1.18rem;
+  line-height: 1.72;
+  /* Transitions now handled by GSAP */
+  will-change: transform, opacity;
+}
+.control-list li:hover { transform: translateX(6px); box-shadow: 0 8px 18px rgba(0,0,0,0.28); }
+
+.control-list li::before {
+  counter-increment: control-point;
+  content: counter(control-point);
+  position: absolute; left: 0.35rem; top: 50%; transform: translateY(-50%);
+  width: 1.25rem; height: 1.25rem;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.62rem; font-weight: 800;
+  color: #111317;
+  background: linear-gradient(145deg, #f4f6fa, #d5dbe4);
+  box-shadow: 0 0 12px rgba(255,255,255,0.35);
+}
+.control-card-bg { background: rgba(59, 130, 246, 0.05); }

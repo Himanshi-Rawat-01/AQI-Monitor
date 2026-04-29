@@ -1,0 +1,41 @@
+# Environment variables - NEVER commit these!
+backend/.env
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/__pycache__/
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Uploads (if contains user data)
+uploads/*.jpg
+uploads/*.png
+uploads/*.pdf
+
+# Keep logo
+!uploads/logo.png
+!uploads/bg*.jpg
+!uploads/bg*.mp4
