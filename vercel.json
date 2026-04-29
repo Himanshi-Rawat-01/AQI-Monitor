@@ -13,26 +13,22 @@
       }
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "pollution-app/backend/app.py"
+      "src": "/api/(.*)",
+      "dest": "pollution-app/backend/app.py"
     },
     {
-      "source": "/dashboard/(.*)",
-      "destination": "/pollution-app/react-app/dashboard/$1"
+      "src": "/dashboard/(.*)",
+      "dest": "pollution-app/react-app/dashboard/$1"
     },
     {
-      "source": "/dashboard",
-      "destination": "/pollution-app/react-app/dashboard/index.html"
+      "src": "/dashboard",
+      "dest": "pollution-app/react-app/dashboard/index.html"
     },
     {
-      "source": "/(uploads/.*)",
-      "destination": "/pollution-app/react-app/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/pollution-app/react-app/$1"
+      "src": "/(.*)",
+      "dest": "pollution-app/react-app/$1"
     }
   ]
 }
