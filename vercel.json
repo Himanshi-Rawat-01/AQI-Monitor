@@ -20,19 +20,19 @@
     },
     {
       "source": "/dashboard/(.*)",
-      "destination": "pollution-app/react-app/public/dashboard/$1"
+      "destination": "/dashboard/$1"
     },
     {
       "source": "/dashboard",
-      "destination": "pollution-app/react-app/public/dashboard/index.html"
+      "destination": "/dashboard/index.html"
     },
     {
       "source": "/(uploads/.*)",
-      "destination": "pollution-app/react-app/public/$1"
+      "destination": "/$1"
     },
     {
       "source": "/(.*)",
-      "destination": "pollution-app/react-app/index.html"
+      "destination": "/index.html"
     }
   ]
 }
