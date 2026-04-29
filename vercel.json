@@ -31,8 +31,16 @@
       "destination": "pollution-app/frontend/$1"
     },
     {
-      "source": "/(.*)",
+      "source": "/(assets/.*)",
       "destination": "pollution-app/react-app/$1"
+    },
+    {
+      "source": "/(uploads/.*)",
+      "destination": "pollution-app/react-app/public/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "pollution-app/react-app/index.html"
     }
   ]
 }
