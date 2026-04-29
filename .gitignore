@@ -1,42 +1,43 @@
+# The "Everything" Ignore List
+# This tells Git to ignore these folders NO MATTER WHERE they are.
+
 # Dependencies
-**/node_modules/
-**/.venv/
-**/venv/
-**/env/
-**/ENV/
+node_modules
+.venv
+venv
+env
+ENV
 
-# Build outputs
-**/dist/
-**/build/
-**/*.pyc
-**/__pycache__/
-**/*.so
-**/.Python
+# Build & Cache
+dist
+build
+__pycache__
+*.pyc
+*.pyo
+.Python
 
-# IDEs and Editors
-**/.vscode/
-**/.idea/
-**/*.swp
-**/*.swo
-**/.anima/
+# Editor & IDEs
+.vscode
+.idea
+.anima
+*.swp
+*.swo
 
-# OS files
-**/.DS_Store
-**/Thumbs.db
-**/desktop.ini
+# OS Junk
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# Environment variables
-**/.env
-**/.env.local
-**/.env.development.local
-**/.env.test.local
-**/.env.production.local
+# Environment Secrets
+.env
+.env.*
+!.env.example
 
 # Logs
-**/*.log
-**/npm-debug.log*
-**/yarn-debug.log*
-**/yarn-error.log*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Vercel
-**/.vercel
+.vercel
