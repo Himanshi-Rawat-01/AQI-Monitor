@@ -11,12 +11,24 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "pollution-app/frontend/**",
+      "use": "@vercel/static"
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "pollution-app/backend/app.py"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "pollution-app/frontend/dashboard.html"
+    },
+    {
+      "source": "/frontend/(.*)",
+      "destination": "pollution-app/frontend/$1"
     },
     {
       "source": "/(.*)",
