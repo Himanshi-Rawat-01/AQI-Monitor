@@ -16,13 +16,20 @@ let charts      = {};     // keyed chart instances
 // ─── BOOT ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
 
+  // Start clock immediately
+  startClock();
+  
+  // Quick fade out for loading screen
   setTimeout(() => {
     const l = document.getElementById('loading');
-    l.style.opacity = '0';
-    setTimeout(() => l.style.display = 'none', 500);
-    startClock();
-    fetchAQI();
-  }, 1600);
+    if (l) {
+      l.style.opacity = '0';
+      setTimeout(() => l.style.display = 'none', 500);
+    }
+  }, 400);
+
+  // Fetch data immediately
+  fetchAQI();
 
   document.getElementById('cityInput')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') fetchAQI();
