@@ -228,7 +228,7 @@
   font-family: var(--font-display, 'Outfit', sans-serif);
   font-size: 1.6rem; font-weight: 800;
   background: linear-gradient(135deg, #fff 30%, #a7f3d0);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   margin-bottom: 0.22rem;
 }
 .auth-subtitle { font-size: 0.79rem; color: rgba(255,255,255,0.46); }
