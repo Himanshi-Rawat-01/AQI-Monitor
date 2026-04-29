@@ -86,7 +86,7 @@ export default function Login({ initialTab = 'login' }) {
         const store = rememberMe ? localStorage : sessionStorage
         store.setItem('aqi_token', data.access_token)
         store.setItem('aqi_user', JSON.stringify({ email: data.email, username: data.username }))
-        window.location.replace('/frontend/dashboard.html')
+        window.location.replace(CONFIG.DASHBOARD_URL)
       } else { setLoginError(data.error || 'Login failed.') }
     } catch (err) { setLoginError(err.message || 'Network error.') }
     finally { setLoginLoading(false) }

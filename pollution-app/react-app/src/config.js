@@ -1,6 +1,6 @@
-const API_BASE_URL = import.meta.env.PROD
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD
   ? `${window.location.protocol}//${window.location.hostname}:5000`
-  : '';  // Vite proxy handles /api in dev
+  : '');  // Vite proxy handles /api in dev
 
 const CONFIG = {
   API_BASE_URL,
@@ -27,7 +27,7 @@ const CONFIG = {
     USER: 'aqi_user',
     MOTION_PREFERENCE: 'prefers_reduced_motion',
   },
-  DASHBOARD_URL: '/frontend/dashboard.html',
+  DASHBOARD_URL: `${API_BASE_URL}/frontend/dashboard.html`,
 };
 
 export default CONFIG;

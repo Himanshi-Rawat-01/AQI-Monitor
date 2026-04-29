@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import CONFIG from '../../config'
 
 export default function HeroSection() {
   const heroRef = useRef(null)
@@ -108,7 +109,7 @@ export default function HeroSection() {
             onClick={() => {
               const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token');
               if (token) {
-                window.location.href = '/frontend/dashboard.html';
+                window.location.href = CONFIG.DASHBOARD_URL;
               } else {
                 window.location.href = '/login';
               }

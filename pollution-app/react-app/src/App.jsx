@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Plasma from './components/Plasma'
+import CONFIG from './config'
 
 function App() {
   const [plasmaColor, setPlasmaColor] = useState('#ffffff')
@@ -27,11 +28,18 @@ function App() {
         <Route path="/" element={<Home setPlasmaColor={setPlasmaColor} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Navigate to="/frontend/dashboard.html" />} />
+        <Route path="/dashboard" element={<RedirectToDashboard />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   )
+}
+
+function RedirectToDashboard() {
+  useEffect(() => {
+    window.location.replace(CONFIG.DASHBOARD_URL);
+  }, []);
+  return null;
 }
 
 export default App
