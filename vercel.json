@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "pollution-app/backend/app.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "pollution-app/react-app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "pollution-app/backend/app.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "pollution-app/react-app/$1"
+    }
+  ]
+}
