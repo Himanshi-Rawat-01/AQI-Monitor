@@ -19,6 +19,10 @@
       "dest": "pollution-app/backend/app.py"
     },
     {
+      "src": "/assets/(.*)",
+      "dest": "pollution-app/react-app/assets/$1"
+    },
+    {
       "src": "/dashboard/(.*)",
       "dest": "pollution-app/react-app/dashboard/$1"
     },
