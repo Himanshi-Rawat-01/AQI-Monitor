@@ -28,18 +28,12 @@ function App() {
         <Route path="/" element={<Home setPlasmaColor={setPlasmaColor} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<RedirectToDashboard />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   )
 }
 
-function RedirectToDashboard() {
-  useEffect(() => {
-    window.location.replace(CONFIG.DASHBOARD_URL);
-  }, []);
-  return null;
-}
+
 
 export default App

@@ -25,9 +25,7 @@ const CONFIG = {
     USER: 'aqi_user',
     MOTION_PREFERENCE: 'prefers_reduced_motion',
   },
-  DASHBOARD_URL: (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
-    ? 'http://127.0.0.1:5001/dashboard'
-    : '/dashboard',
+  DASHBOARD_URL: '/dashboard/index.html',
 };
 
 export default CONFIG;

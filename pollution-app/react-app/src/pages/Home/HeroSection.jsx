@@ -107,6 +107,13 @@ export default function HeroSection() {
         <div className="nature-buttons">
           <a 
             href={localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token') ? CONFIG.DASHBOARD_URL : '/login'}
+            onClick={(e) => {
+              const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token');
+              if (token) {
+                e.preventDefault();
+                window.location.assign(CONFIG.DASHBOARD_URL);
+              }
+            }}
             className="btn btn-primary magnetic-btn"
             style={{ textDecoration: 'none' }}
           >

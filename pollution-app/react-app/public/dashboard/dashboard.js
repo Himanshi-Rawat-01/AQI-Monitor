@@ -15,7 +15,6 @@ let charts      = {};     // keyed chart instances
 
 // ─── BOOT ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-
   // Start clock immediately
   startClock();
   
@@ -27,6 +26,12 @@ window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => l.style.display = 'none', 500);
     }
   }, 400);
+
+  // Check if Chart.js is loaded
+  if (typeof Chart === 'undefined') {
+    console.error('[AirSense] Chart.js failed to load. Some features will be disabled.');
+    showToast('error', '⚠️ Chart.js failed to load. Check your internet connection.');
+  }
 
   // Fetch data immediately
   fetchAQI();
@@ -169,13 +174,14 @@ async function fetchAQI() {
     updateAlert(aqi);
     showToast('success', `✓ Live data loaded for ${city}`);
 
-  } catch {
+  } catch (err) {
+    showToast('error', 'Using demo data (API error)');
     useDemoData(city);
     fetchWeather(city);
+  } finally {
+    buildMainCharts();
+    if (btn) { btn.textContent = '↗ Fetch AQI'; btn.disabled = false; }
   }
-
-  buildMainCharts();
-  if (btn) { btn.textContent = '↗ Fetch AQI'; btn.disabled = false; }
 }
 
 // ─── DEMO DATA ─────────────────────────────────────────────────────────────

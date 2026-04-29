@@ -1103,7 +1103,7 @@ def home() -> tuple[Response, Literal[200]]:
 # ==================== SERVE VANILLA FRONTEND FILES ====================
 # ==================== SERVE VANILLA FRONTEND FILES ====================
 # Ensure the path is absolute and correctly resolves relative to this file
-FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'react-app', 'public', 'dashboard'))
 
 @app.route('/dashboard')
 def serve_dashboard_root():

@@ -11,10 +11,6 @@
       "config": {
         "distDir": "dist"
       }
-    },
-    {
-      "src": "pollution-app/frontend/**",
-      "use": "@vercel/static"
     }
   ],
   "rewrites": [
@@ -23,16 +19,12 @@
       "destination": "pollution-app/backend/app.py"
     },
     {
+      "source": "/dashboard/(.*)",
+      "destination": "pollution-app/react-app/public/dashboard/$1"
+    },
+    {
       "source": "/dashboard",
-      "destination": "pollution-app/frontend/dashboard.html"
-    },
-    {
-      "source": "/frontend/(.*)",
-      "destination": "pollution-app/frontend/$1"
-    },
-    {
-      "source": "/(assets/.*)",
-      "destination": "pollution-app/react-app/$1"
+      "destination": "pollution-app/react-app/public/dashboard/index.html"
     },
     {
       "source": "/(uploads/.*)",

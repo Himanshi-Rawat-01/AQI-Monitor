@@ -1,56 +1,48 @@
 @echo off
+setlocal
 echo ============================================================
 echo        AQI MONITOR - BACKEND SERVER STARTER
 echo ============================================================
 echo.
-echo Checking configuration...
-echo.
-
+echo [1/4] Entering backend directory...
 cd backend
 
-REM Activate root virtual environment
-call ..\..\.venv\Scripts\activate.bat
-if %ERRORLEVEL% NEQ 0 (
-    echo ERROR: Failed to activate virtual environment.
+echo [2/4] Activating virtual environment...
+if exist "..\..\.venv\Scripts\activate.bat" (
+    call ..\..\.venv\Scripts\activate.bat
+) else (
+    echo ERROR: Virtual environment not found at ..\..\.venv
+    echo Please ensure the .venv folder exists in the project root.
     pause
     exit /b 1
 )
 
-REM Check if .env exists
+echo [3/4] Checking configuration...
 if not exist ".env" (
-    echo ERROR: .env file not found!
-    echo.
-    echo Please create .env file:
-    echo   1. Copy .env.example to .env
-    echo   2. Add your MongoDB URI
-    echo   3. Add your OpenWeatherMap API key
-    echo.
+    echo ERROR: .env file missing in backend folder!
+    echo Please copy .env.example to .env and fill in your keys.
     pause
     exit /b 1
 )
 
-REM Install dependencies
-echo Installing/updating dependencies...
-pip install -q -r requirements.txt
-
-REM Test configuration
-echo.
-echo Testing configuration...
 python test_config.py
-
 if %ERRORLEVEL% NEQ 0 (
     echo.
-    echo Configuration test failed! Please fix errors above.
+    echo [!] Configuration test failed. Please check your .env settings.
     pause
     exit /b 1
 )
 
-REM Start the server
+echo [4/4] Starting Flask Server on port 5001...
 echo.
 echo ============================================================
-echo Starting Flask backend server...
+echo SERVER STARTING...
 echo ============================================================
-echo.
 python app.py
 
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ERROR] Backend crashed or failed to start.
+    echo Check if another process is using port 5001.
+)
 pause
