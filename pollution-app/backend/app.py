@@ -1105,6 +1105,12 @@ def home() -> tuple[Response, Literal[200]]:
 # Ensure the path is absolute and correctly resolves relative to this file
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
 
+@app.route('/dashboard')
+def serve_dashboard_root():
+    """Direct route for dashboard"""
+    from flask import send_from_directory
+    return send_from_directory(FRONTEND_DIR, 'dashboard.html')
+
 @app.route('/frontend/<path:filename>')
 def serve_frontend(filename):
     """Serve vanilla frontend files (dashboard, etc.)"""
