@@ -84,3 +84,4 @@
 .timeline-card:nth-of-type(odd) .process-step-orb { right: -95px; }
 .timeline-card:nth-of-type(even) .process-step-orb { left: -95px; }
 .timeline-card.is-active .process-step-orb { transform: scale(1.08); box-shadow: 0 0 22px rgba(220,226,236,0.58); }
+.process-card-bg { background: rgba(245, 158, 11, 0.05); }

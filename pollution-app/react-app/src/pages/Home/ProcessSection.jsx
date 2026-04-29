@@ -23,19 +23,22 @@ export default function ProcessSection() {
     const ctx = gsap.context(() => {
       // Header Dynamic Scaling reveal
       if (headerRef.current) {
-        gsap.from(headerRef.current, {
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 98%',
-            end: 'top 60%',
-            scrub: 0.5
-          },
-          scale: 1.35,
-          opacity: 0,
-          y: 40,
-          filter: 'blur(10px)',
-          ease: 'power2.out'
-        })
+        gsap.fromTo(headerRef.current,
+          { scale: 1.15, opacity: 0, y: 50, filter: 'blur(12px)' },
+          {
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            },
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 1.4,
+            ease: 'power3.out'
+          }
+        )
       }
 
       // Video Parallax
@@ -70,18 +73,21 @@ export default function ProcessSection() {
           { 
             opacity: 0, 
             scale: 0.85, 
-            x: i % 2 === 0 ? -60 : 60 
+            x: i % 2 === 0 ? -80 : 80,
+            filter: 'blur(8px)'
           },
           {
             scrollTrigger: {
               trigger: card,
-              start: 'top 92%',
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
             },
             opacity: 1,
             scale: 1,
             x: 0,
+            filter: 'blur(0px)',
             duration: 1.2,
-            ease: 'back.out(1.1)',
+            ease: 'power4.out',
             clearProps: 'all'
           }
         )

@@ -66,3 +66,4 @@
   background: linear-gradient(145deg, #f4f6fa, #d5dbe4);
   box-shadow: 0 0 12px rgba(255,255,255,0.35);
 }
+.control-card-bg { background: rgba(59, 130, 246, 0.05); }

@@ -27,18 +27,22 @@ export default function ControlSection() {
     const ctx = gsap.context(() => {
       // Header Dynamic Scaling
       if (headerRef.current) {
-        gsap.from(headerRef.current, {
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 95%',
-            end: 'top 60%',
-            scrub: 0.4 // Faster response
-          },
-          scale: 1.3,
-          opacity: 0,
-          y: 30,
-          ease: 'power2.out'
-        })
+        gsap.fromTo(headerRef.current,
+          { scale: 1.15, opacity: 0, y: 40, filter: 'blur(10px)' },
+          {
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            },
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 1.4,
+            ease: 'power3.out'
+          }
+        )
       }
 
       // Bi-lateral Panels Reveal
@@ -46,28 +50,32 @@ export default function ControlSection() {
         const panels = panelsRef.current.children
         
         // Left Panel (Individual)
-        gsap.from(panels[0], {
-          scrollTrigger: {
-            trigger: panelsRef.current,
-            start: 'top 85%',
-          },
-          x: -100,
-          opacity: 0,
-          duration: 1.2,
-          ease: 'power4.out'
-        })
+        gsap.fromTo(panels[0],
+          { x: -100, opacity: 0, rotationY: -10, filter: 'blur(8px)' },
+          {
+            scrollTrigger: {
+              trigger: panelsRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            },
+            x: 0, opacity: 1, rotationY: 0, filter: 'blur(0px)',
+            duration: 1.2, ease: 'power4.out', clearProps: 'all'
+          }
+        )
 
         // Right Panel (Community)
-        gsap.from(panels[1], {
-          scrollTrigger: {
-            trigger: panelsRef.current,
-            start: 'top 85%',
-          },
-          x: 100,
-          opacity: 0,
-          duration: 1.2,
-          ease: 'power4.out'
-        })
+        gsap.fromTo(panels[1],
+          { x: 100, opacity: 0, rotationY: 10, filter: 'blur(8px)' },
+          {
+            scrollTrigger: {
+              trigger: panelsRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            },
+            x: 0, opacity: 1, rotationY: 0, filter: 'blur(0px)',
+            duration: 1.2, ease: 'power4.out', clearProps: 'all'
+          }
+        )
 
         // List Staggering
         gsap.fromTo('.control-list li', 
@@ -76,11 +84,12 @@ export default function ControlSection() {
             scrollTrigger: {
               trigger: panelsRef.current,
               start: 'top 75%',
+              toggleActions: 'play none none reverse'
             },
             opacity: 1,
             y: 0,
             duration: 0.8,
-            stagger: 0.12,
+            stagger: 0.1,
             ease: 'back.out(1.2)',
             clearProps: 'all'
           }
