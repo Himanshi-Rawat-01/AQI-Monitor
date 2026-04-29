@@ -1,4 +1,4 @@
-import ColorBends from './ColorBends';
+import Beams from './Beams';
 
 export default function AuthBackground() {
   return (
@@ -12,21 +12,15 @@ export default function AuthBackground() {
         background: '#000',   /* base black — shows through transparent canvas */
       }}
     >
-      <ColorBends
-        colors={["#ffffff", "#d0d0d0", "#a0a0a0", "#e8e8e8"]}
-        rotation={90}
-        speed={0.2}
-        scale={1}
-        frequency={1}
-        warpStrength={1}
-        mouseInfluence={1}
-        noise={0.15}
-        parallax={0.5}
-        iterations={1}
-        intensity={1.5}
-        bandWidth={6}
-        transparent
-        autoRotate={0}
+      <Beams
+        beamWidth={3}
+        beamHeight={30}
+        beamNumber={15}
+        lightColor="#ffffff"
+        speed={2}
+        noiseIntensity={1.75}
+        scale={0.2}
+        rotation={30}
       />
     </div>
   );

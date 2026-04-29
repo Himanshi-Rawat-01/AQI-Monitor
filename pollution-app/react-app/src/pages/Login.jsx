@@ -29,8 +29,8 @@ function BrandingContent() {
   )
 }
 
-export default function Login() {
-  const [activeTab,   setActiveTab]   = useState('login')
+export default function Login({ initialTab = 'login' }) {
+  const [activeTab,   setActiveTab]   = useState(initialTab)
   const [isSwitching, setIsSwitching] = useState(false)
   const switchTimerRef = useRef(null)   // track timeout for cleanup
 
