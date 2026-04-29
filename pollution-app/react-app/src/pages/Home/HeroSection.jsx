@@ -105,21 +105,15 @@ export default function HeroSection() {
         </p>
 
         <div className="nature-buttons">
-          <button 
-            onClick={() => {
-              const token = localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token');
-              if (token) {
-                window.location.href = CONFIG.DASHBOARD_URL;
-              } else {
-                window.location.href = '/login';
-              }
-            }} 
+          <a 
+            href={localStorage.getItem('aqi_token') || sessionStorage.getItem('aqi_token') ? CONFIG.DASHBOARD_URL : '/login'}
             className="btn btn-primary magnetic-btn"
+            style={{ textDecoration: 'none' }}
           >
             <span className="btn-content">
               <i className="fa fa-bolt btn-icon"></i> Start Monitoring
             </span>
-          </button>
+          </a>
           <Link to="/register" className="btn btn-secondary magnetic-btn">
             <span className="btn-content">
               <i className="fa fa-arrow-right btn-icon"></i> Create Free Account
