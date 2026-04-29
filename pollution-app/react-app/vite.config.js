@@ -9,15 +9,15 @@ export default defineConfig({
     host: '127.0.0.1', // Bind to IPv4 explicitly
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       },
       '/dashboard': {
-        target: 'http://127.0.0.1:5000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       },
       '/frontend': {
-        target: 'http://127.0.0.1:5000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       }
     }
