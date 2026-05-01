@@ -10,6 +10,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
+    const isMobile = window.innerWidth <= 768
 
     const ctx = gsap.context(() => {
       // Hero title - Immersive scale-up effect
@@ -19,12 +20,12 @@ export default function HeroSection() {
           scrollTrigger: {
             trigger: heroRef.current,
             start: 'top top',
-            end: '+=600', // Faster completion
-            scrub: 0.4,   // Reduced lag
+            end: '+=600', 
+            scrub: isMobile ? false : 0.4,   // Disable scrub on mobile for better performance
           },
-          scale: 1.2,
+          scale: isMobile ? 1.05 : 1.2,
           opacity: 0,
-          y: 60,
+          y: isMobile ? 30 : 60,
           ease: 'power1.inOut'
         }
       )
@@ -37,55 +38,59 @@ export default function HeroSection() {
             trigger: heroRef.current,
             start: 'top top',
             end: '+=500', 
-            scrub: 0.3,
+            scrub: isMobile ? false : 0.3,
           },
-          scale: 0.9,
+          scale: isMobile ? 1 : 0.9,
           opacity: 0,
-          y: 40,
-          stagger: 0.05,
+          y: isMobile ? 20 : 40,
+          stagger: isMobile ? 0 : 0.05,
           ease: 'power1.inOut'
         }
       )
-      // Magnetic Buttons Logic
-      const magneticBtns = document.querySelectorAll('.magnetic-btn')
-      magneticBtns.forEach(btn => {
-        const content = btn.querySelector('.btn-content')
-        
-        btn.addEventListener('mousemove', (e) => {
-          const rect = btn.getBoundingClientRect()
-          const x = e.clientX - rect.left - rect.width / 2
-          const y = e.clientY - rect.top - rect.height / 2
+
+      // Magnetic Buttons Logic - Desktop Only
+      if (!isMobile) {
+        const magneticBtns = document.querySelectorAll('.magnetic-btn')
+        magneticBtns.forEach(btn => {
+          const content = btn.querySelector('.btn-content')
           
-          gsap.to(btn, {
-            x: x * 0.35,
-            y: y * 0.35,
-            duration: 0.4,
-            ease: 'power2.out'
-          })
-          
-          if (content) {
-            gsap.to(content, {
-              x: x * 0.15,
-              y: y * 0.15,
+          btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect()
+            const x = e.clientX - rect.left - rect.width / 2
+            const y = e.clientY - rect.top - rect.height / 2
+            
+            gsap.to(btn, {
+              x: x * 0.35,
+              y: y * 0.35,
               duration: 0.4,
               ease: 'power2.out'
             })
-          }
-        })
-        
-        btn.addEventListener('mouseleave', () => {
-          gsap.to([btn, content], {
-            x: 0,
-            y: 0,
-            duration: 0.6,
-            ease: 'elastic.out(1.1, 0.4)'
+            
+            if (content) {
+              gsap.to(content, {
+                x: x * 0.15,
+                y: y * 0.15,
+                duration: 0.4,
+                ease: 'power2.out'
+              })
+            }
+          })
+          
+          btn.addEventListener('mouseleave', () => {
+            gsap.to([btn, content], {
+              x: 0,
+              y: 0,
+              duration: 0.6,
+              ease: 'elastic.out(1.1, 0.4)'
+            })
           })
         })
-      })
+      }
     })
 
     return () => ctx.revert()
   }, [])
+
 
   return (
     <section className="hero" id="hero" ref={heroRef}>

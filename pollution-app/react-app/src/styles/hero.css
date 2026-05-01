@@ -1,8 +1,11 @@
 .hero {
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   isolation: isolate;
   padding: 7.5rem 1.5rem 4rem;
+  display: flex;
+  align-items: center;
 }
 
 .nature-center {

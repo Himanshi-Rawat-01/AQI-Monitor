@@ -15,15 +15,54 @@
   .feature-card { flex: 0 0 100%; min-height: 300px; padding: 2rem 1.6rem; }
   .feature-nav { width: 2.5rem; height: 2.5rem; }
   .scroll-cue { bottom: 1rem; }
-  .nav-menu { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(15,20,25,0.95); padding: 1rem; }
+  .nav-menu { 
+    display: none; 
+    flex-direction: column; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    height: 100dvh;
+    background: rgba(10, 15, 20, 0.98); 
+    backdrop-filter: blur(15px);
+    padding: 6rem 2rem; 
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    z-index: 999;
+  }
   .nav-menu.active { display: flex; }
-  .hamburger { display: flex; }
+  .nav-menu .nav-item { width: 100%; text-align: center; }
+  .nav-menu .nav-link { font-size: 1.5rem; width: 100%; }
+  .hamburger { display: flex; position: relative; z-index: 1001; }
   .auth-card { grid-template-columns: 1fr; }
   .auth-branding { display: none; }
   .auth-form-section { padding: 2rem 1.5rem; }
+
 }
 
 @media (max-width: 480px) {
-  .nature-buttons { flex-direction: column; align-items: center; }
-  .hero-features-row { flex-direction: column; }
+  .nature-buttons { flex-direction: column; align-items: center; width: 100%; }
+  .nature-buttons .btn { width: 100%; min-width: unset; }
+  .hero-features-row { flex-direction: column; gap: 0.8rem; }
+  .nature-title { font-size: 2.4rem; }
+  .nature-desc { font-size: 1.1rem; }
+}
+
+/* Fix for mobile browser chrome */
+@supports (height: 100dvh) {
+  .hero, section {
+    min-height: 100dvh !important;
+  }
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) {
+  .btn:hover {
+    transform: none !important;
+  }
+  .magnetic-btn {
+    transform: none !important;
+  }
 }

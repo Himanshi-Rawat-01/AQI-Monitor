@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       {location.pathname === '/' && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1, pointerEvents: 'none', backgroundColor: '#000000' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100dvh', zIndex: -1, pointerEvents: 'none', backgroundColor: '#000000' }}>
           <Plasma
             color={plasmaColor}
             speed={0.6}

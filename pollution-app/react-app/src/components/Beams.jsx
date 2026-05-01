@@ -152,6 +152,9 @@ const Beams = ({
   rotation = 0
 }) => {
   const meshRef = useRef(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const optimizedBeamNumber = isMobile ? Math.min(beamNumber, 6) : beamNumber;
+
   const beamMaterial = useMemo(
     () =>
       extendMaterial(THREE.MeshStandardMaterial, {
@@ -212,7 +215,7 @@ const Beams = ({
   return (
     <CanvasWrapper>
       <group rotation={[0, 0, degToRad(rotation)]}>
-        <PlaneNoise ref={meshRef} material={beamMaterial} count={beamNumber} width={beamWidth} height={beamHeight} />
+        <PlaneNoise ref={meshRef} material={beamMaterial} count={optimizedBeamNumber} width={beamWidth} height={beamHeight} />
         <DirLight color={lightColor} position={[0, 3, 10]} />
       </group>
       <ambientLight intensity={1} />
@@ -272,13 +275,16 @@ function createStackedPlanesBufferGeometry(n, width, height, spacing, heightSegm
 
 const MergedPlanes = forwardRef(({ material, width, count, height }, ref) => {
   const mesh = useRef(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   useImperativeHandle(ref, () => mesh.current);
   const geometry = useMemo(
-    () => createStackedPlanesBufferGeometry(count, width, height, 0, 100),
-    [count, width, height]
+    () => createStackedPlanesBufferGeometry(count, width, height, 0, isMobile ? 40 : 100),
+    [count, width, height, isMobile]
   );
   useFrame((_, delta) => {
-    mesh.current.material.uniforms.time.value += 0.1 * delta;
+    if (mesh.current) {
+      mesh.current.material.uniforms.time.value += 0.1 * delta;
+    }
   });
   return <mesh ref={mesh} geometry={geometry} material={material} />;
 });

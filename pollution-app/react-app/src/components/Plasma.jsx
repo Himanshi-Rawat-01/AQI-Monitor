@@ -43,7 +43,8 @@ void mainImage(out vec4 o, vec2 C) {
   float i, d, z, T = iTime * uSpeed * uDirection;
   vec3 O, p, S;
 
-  for (vec2 r = iResolution.xy, Q; ++i < 60.; O += o.w/d*o.xyz) {
+  float iterations = iResolution.x < 768.0 ? 30.0 : 60.0;
+  for (vec2 r = iResolution.xy, Q; ++i < iterations; O += o.w/d*o.xyz) {
     p = z*normalize(vec3(C-.5*r,r.y)); 
     p.z -= 4.; 
     S = p;
@@ -105,11 +106,12 @@ export const Plasma = ({
 
     const directionMultiplier = direction === 'reverse' ? -1.0 : 1.0;
 
+    const isMobile = window.innerWidth <= 768;
     const renderer = new Renderer({
       webgl: 2,
       alpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2)
+      dpr: isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2)
     });
     const gl = renderer.gl;
     const canvas = gl.canvas;

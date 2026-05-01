@@ -10,10 +10,14 @@ export default function SmoothScroll({ children }) {
     // Safety: Ensure we are in the browser
     if (typeof window === 'undefined') return
 
+    // Disable smooth scroll on mobile for better performance and native feel
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    if (isMobile) return
+
     const lenis = new Lenis({
-      duration: 1,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: false, // Standard mouse scroll (Reliable)
+      smoothWheel: true,
       touchMultiplier: 1.5,
       autoRaf: true
     })
@@ -43,3 +47,4 @@ export default function SmoothScroll({ children }) {
 
   return <>{children}</>
 }
+
